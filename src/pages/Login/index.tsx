@@ -34,7 +34,7 @@ const Login: React.FC = () => {
     <MainContainer>
       <ShapeLogo />
       <LoginContainer>
-        <Title>Buy 2 Gather</Title>
+        <Title>Buy 2 Gether</Title>
         <h2>Login</h2>
         <Form>
           <div>

@@ -16,14 +16,13 @@ const Register: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [cpf_cnpj, setCpf_cnpj] = useState("");
-  const [ramo, setRamo] = useState("");
 
   const [emailError, setEmailError] = useState("");
   const [cpfError, setCpfError] = useState("");
 
   const handleRegister = () => {
     // Verificar se todos os campos estão preenchidos
-    if (!username || !email || !password || !cpf_cnpj || !ramo) {
+    if (!username || !email || !password || !cpf_cnpj) {
       alert("Por favor, preencha todos os campos.");
       return;
     }
@@ -52,7 +51,7 @@ const Register: React.FC = () => {
     <MainContainer>
       <ShapeLogo />
       <RegisterContainer>
-        <Title>Buy 2 Gather</Title>
+        <Title>Buy 2 Gether</Title>
         <h2>Registro</h2>
         <Form>
           <div>
