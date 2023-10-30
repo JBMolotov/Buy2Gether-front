@@ -1,41 +1,51 @@
 import React, { useState } from "react";
-import {
-  Title,
-  MainContainer,
-  Shape,
-  LoginContainer,
-  Form,
-  Button,
-} from "./styles";
+import { Title, MainContainer, LoginContainer, Form } from "./styles";
 import TextField from "../../components/textfield";
+import Button from "../../components/button";
+import ShapeLogo from "../../components/shapeLogo";
+import { isEmailValid, isCPFValid } from "../validation"; // Importe as funções de validação
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [isValid, setIsValid] = useState(true);
 
   const handleLogin = () => {
-    // Lógica de autenticação aqui
-    if (username === "user" && password === "password") {
+    if (
+      isValid &&
+      (username === "user@email.com" || username === "1234567890") &&
+      password === "password"
+    ) {
       alert("Login bem-sucedido! Redirecionando para a página de perfil.");
-      // Substitua o redirecionamento com a lógica de roteamento apropriada
     } else {
       alert("Credenciais inválidas. Tente novamente.");
     }
   };
 
+  const validateEmailOrCPF = (input: string) => {
+    if (isEmailValid(input) || isCPFValid(input)) {
+      setIsValid(true);
+    } else {
+      setIsValid(false);
+    }
+  };
+
   return (
     <MainContainer>
-      <Shape />
+      <ShapeLogo />
       <LoginContainer>
         <Title>Buy 2 Gather</Title>
         <h2>Login</h2>
         <Form>
           <div>
-            <label>Nome de usuário:</label>
+            <label>Email ou CPF:</label>
             <TextField
               type="text"
               value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              onChange={(e) => {
+                setUsername(e.target.value);
+                validateEmailOrCPF(e.target.value);
+              }}
             />
           </div>
           <div>
@@ -46,9 +56,40 @@ const Login: React.FC = () => {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-          <Button type="button" onClick={handleLogin}>
-            Entrar
-          </Button>
+          {/* <div className="checkbox">
+            <input type="checkbox" />
+            <label>Lembrar-me</label>
+          </div> */}
+
+          <Button text="Entrar" onClick={handleLogin} />
+
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              width: " 35rem",
+              justifyContent: "space-between",
+            }}
+          >
+            <Button
+              text="Cadastre-se como cliente"
+              onClick={() => {
+                window.location.href = "/register";
+              }}
+            />
+
+            <Button
+              text="Cadastre-se como empresa"
+              onClick={() => {
+                window.location.href = "/registerCompany";
+              }}
+            />
+          </div>
+
+          {/* Forget the password section */}
+          <div className="forget-password">
+            <a href="#">Esqueceu a senha?</a>
+          </div>
         </Form>
       </LoginContainer>
     </MainContainer>

@@ -9,21 +9,21 @@ import {
   Form,
   ErrorMsg,
 } from "./styles";
-import { isEmailValid, isCPFValid } from "../validation";
+import { isEmailValid, isCNPJValid } from "../validation";
 
 const Register: React.FC = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [cpf_cnpj, setCpf_cnpj] = useState("");
+  const [cnpj_cnpj, setCnpj_cnpj] = useState("");
   const [ramo, setRamo] = useState("");
 
   const [emailError, setEmailError] = useState("");
-  const [cpfError, setCpfError] = useState("");
+  const [cnpjError, setCnpjError] = useState("");
 
   const handleRegister = () => {
     // Verificar se todos os campos estão preenchidos
-    if (!username || !email || !password || !cpf_cnpj || !ramo) {
+    if (!username || !email || !password || !cnpj_cnpj || !ramo) {
       alert("Por favor, preencha todos os campos.");
       return;
     }
@@ -36,15 +36,17 @@ const Register: React.FC = () => {
       setEmailError("");
     }
 
-    if (!isCPFValid(cpf_cnpj)) {
-      setCpfError("CPF inválido");
-      return; // Retorna se o CPF for inválido
+    if (!isCNPJValid(cnpj_cnpj)) {
+      setCnpjError("CNPJ inválido");
+      return; // Retorna se o Cnpj for inválido
     } else {
-      setCpfError("");
+      setCnpjError("");
     }
 
     // Se chegou até aqui, todos os campos estão preenchidos e as validações passaram
-    alert("Registro bem-sucedido!");
+    alert(
+      "Registro bem-sucedido! Aguardando aprovação pela plataforma... Isso pode levar alguns dias."
+    );
     window.location.href = "/login";
   };
 
@@ -53,7 +55,7 @@ const Register: React.FC = () => {
       <ShapeLogo />
       <RegisterContainer>
         <Title>Buy 2 Gather</Title>
-        <h2>Registro</h2>
+        <h2>Registro Empresa</h2>
         <Form>
           <div>
             <label>Nome:</label>
@@ -81,13 +83,21 @@ const Register: React.FC = () => {
             />
           </div>
           <div>
-            <label>CPF:</label>
+            <label>CNPJ:</label>
             <TextField
               type="text"
-              value={cpf_cnpj}
-              onChange={(e) => setCpf_cnpj(e.target.value)}
+              value={cnpj_cnpj}
+              onChange={(e) => setCnpj_cnpj(e.target.value)}
             />
-            <ErrorMsg>{cpfError}</ErrorMsg>
+            <ErrorMsg>{cnpjError}</ErrorMsg>
+          </div>
+          <div>
+            <label>Ramo de atuação:</label>
+            <TextField
+              type="text"
+              value={ramo}
+              onChange={(e) => setRamo(e.target.value)}
+            />
           </div>
           <Button text="Registrar" onClick={handleRegister} />
           <Button

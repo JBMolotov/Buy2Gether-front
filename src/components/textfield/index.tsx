@@ -11,7 +11,12 @@ interface Props {
 }
 
 const Textfield: React.FC<Props> = ({ type, value, onChange }) => {
-  return <TextField type={type} value={value} onChange={onChange} />;
+  return (
+    <>
+      <br></br>
+      <TextField type={type} value={value} onChange={onChange} />
+    </>
+  );
 };
 
 export default Textfield;
