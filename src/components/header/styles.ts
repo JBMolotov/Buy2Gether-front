@@ -8,6 +8,8 @@ export const HeaderBar = styled.header`
   align-items: center;
   justify-content: space-between;
   padding: 0.25rem 1rem;
+  width: 100%;
+  box-sizing: border-box;
 `;
 
 export const Logo = styled.h1`

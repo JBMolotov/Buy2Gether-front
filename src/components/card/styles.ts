@@ -1,15 +1,14 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 export const CardContainer = styled.div`
-  width: 100vw;
-  min-height: 100vh;
+  min-height: 92vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
   padding: 20px;
   box-sizing: border-box;
-  background-color: #f5f5f5;
+  background-color: #f0f0f0;
   margin: 0;
 `;
 
@@ -30,7 +29,7 @@ export const FullWidthButton = styled.button`
   padding: 10px 20px;
   margin: 10px 0;
   border: none;
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
   cursor: pointer;
 
