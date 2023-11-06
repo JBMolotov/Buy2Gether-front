@@ -4,6 +4,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register"; // Importe o componente de registro
 import RegisterCompany from "./pages/RegisterCompany";
 import Approvals from "./pages/Approvals";
+import ManageOffers from "./pages/ManageOffers";
 
 function AppRoutes() {
   return (
@@ -12,6 +13,7 @@ function AppRoutes() {
         <Routes>
           {/* <Route path="/" exact component={Home} /> */}
           <Route path="/approvals" element={<Approvals />} />
+          <Route path="/manageOffers" element={<ManageOffers />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/registerCompany" element={<RegisterCompany />} />

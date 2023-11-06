@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 
 export const HeaderBar = styled.header`
-  background-color: #be0000;
+  background-color: #880000;
   color: #fff;
   display: flex;
   align-items: center;
@@ -13,9 +13,8 @@ export const HeaderBar = styled.header`
 export const Logo = styled.h1`
   cursor: pointer;
   font-size: 1.5rem;
-  &:hover {
-    color: #ddd;
-  }
+  text-decoration: none !important;
+  color: #fff;
 `;
 
 export const Nav = styled.nav`
