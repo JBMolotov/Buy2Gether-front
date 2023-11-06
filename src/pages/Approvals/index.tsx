@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import Card from "../../components/card/Card";
 import { ApprovalsTable, StatusButton, StatusDisplay } from "./styles";
+import Header from "../../components/header/Header";
+
 type ApprovalItem = {
   id: number;
   cnpj: string;
@@ -52,56 +54,61 @@ const Approvals: React.FC = () => {
   };
 
   return (
-    <Card>
-      <ApprovalsTable width="60%">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Nome da Empresa</th>
-            <th>CNPJ</th>
-            <th>Ramo de Atividade</th>
-            <th>Status</th>
-            <th>Aprovação</th>
-            <th>Aprovado/Rejeitado Por</th>
-          </tr>
-        </thead>
-        <tbody>
-          {items.map((item) => (
-            <tr key={item.id}>
-              <td>{item.id}</td>
-              <td>{item.companyName}</td>
-              <td>{item.cnpj}</td>
-              <td>{item.fieldOfActivity}</td>
-              <td>
-                <StatusDisplay status={item.status}>
-                  {item.status.charAt(0).toUpperCase() + item.status.slice(1)}
-                </StatusDisplay>
-              </td>
-              <td>
-                {item.status === "Pendente" && (
-                  <>
-                    <StatusButton
-                      onClick={() => handleStatusChange(item.id, "Aprovado")}
-                    >
-                      Aprovar
-                    </StatusButton>
-                    <StatusButton
-                      reject
-                      onClick={() => handleStatusChange(item.id, "Rejeitado")}
-                    >
-                      Reprovar
-                    </StatusButton>
-                  </>
-                )}
-                {item.status === "Aprovado" && <span>Empresa aprovada</span>}
-                {item.status === "Rejeitado" && <span>Empresa reprovada</span>}
-              </td>
-              <td>{item.approver}</td>
+    <>
+      <Header />
+      <Card>
+        <ApprovalsTable width="60%">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nome da Empresa</th>
+              <th>CNPJ</th>
+              <th>Ramo de Atividade</th>
+              <th>Status</th>
+              <th>Aprovação</th>
+              <th>Aprovado/Rejeitado Por</th>
             </tr>
-          ))}
-        </tbody>
-      </ApprovalsTable>
-    </Card>
+          </thead>
+          <tbody>
+            {items.map((item) => (
+              <tr key={item.id}>
+                <td>{item.id}</td>
+                <td>{item.companyName}</td>
+                <td>{item.cnpj}</td>
+                <td>{item.fieldOfActivity}</td>
+                <td>
+                  <StatusDisplay status={item.status}>
+                    {item.status.charAt(0).toUpperCase() + item.status.slice(1)}
+                  </StatusDisplay>
+                </td>
+                <td>
+                  {item.status === "Pendente" && (
+                    <>
+                      <StatusButton
+                        onClick={() => handleStatusChange(item.id, "Aprovado")}
+                      >
+                        Aprovar
+                      </StatusButton>
+                      <StatusButton
+                        reject
+                        onClick={() => handleStatusChange(item.id, "Rejeitado")}
+                      >
+                        Reprovar
+                      </StatusButton>
+                    </>
+                  )}
+                  {item.status === "Aprovado" && <span>Empresa aprovada</span>}
+                  {item.status === "Rejeitado" && (
+                    <span>Empresa reprovada</span>
+                  )}
+                </td>
+                <td>{item.approver}</td>
+              </tr>
+            ))}
+          </tbody>
+        </ApprovalsTable>
+      </Card>
+    </>
   );
 };
 
