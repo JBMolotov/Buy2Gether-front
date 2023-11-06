@@ -1,12 +1,5 @@
 import React, { ReactNode } from "react";
-import {
-  CardContainer,
-  StyledTable,
-  FullWidthButton,
-  StatusApproved,
-  StatusRejected,
-  StatusPending,
-} from "./styles";
+import { CardContainer } from "./styles";
 
 type CardProps = {
   children: ReactNode;
