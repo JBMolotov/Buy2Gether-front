@@ -32,21 +32,19 @@ const ManageOffers: React.FC = () => {
 
   const handleAddOffer = () => {
     if (editOffer) {
-      // Se houver uma oferta em edição, atualize-a em vez de adicionar
       const updatedOffers = offers.map((offer) =>
         offer.id === editOffer.id ? newOffer : offer
       );
       setOffers(updatedOffers);
-      setEditOffer(null); // Limpe a oferta em edição
+      setEditOffer(null);
     } else {
       setOffers([...offers, newOffer]);
     }
-
     setNewOffer(initialOffer);
   };
 
   const handleEditOffer = (offer: OfferItem) => {
-    setEditOffer(offer); // Defina a oferta em edição para que possamos preencher o formulário
+    setEditOffer(offer);
     setNewOffer(offer);
   };
 
@@ -54,9 +52,10 @@ const ManageOffers: React.FC = () => {
     const updatedOffers = offers.filter((offer) => offer.id !== id);
     setOffers(updatedOffers);
     if (editOffer && editOffer.id === id) {
-      setEditOffer(null); // Limpe a oferta em edição se ela for excluída
+      setEditOffer(null);
     }
   };
+
   return (
     <>
       <Header />
@@ -67,9 +66,6 @@ const ManageOffers: React.FC = () => {
           <OfferTable>
             <thead>
               <OfferTableRow>
-                <OfferTableHeader>CNPJ</OfferTableHeader>
-                <OfferTableHeader>Área de Atuação</OfferTableHeader>
-                <OfferTableHeader>Nome da Empresa</OfferTableHeader>
                 <OfferTableHeader>Oferta</OfferTableHeader>
                 <OfferTableHeader>Desconto (%)</OfferTableHeader>
                 <OfferTableHeader>Quantidade Mínima</OfferTableHeader>
@@ -80,14 +76,10 @@ const ManageOffers: React.FC = () => {
             <tbody>
               {offers.map((offer) => (
                 <OfferTableRow key={offer.id}>
-                  <OfferTableCell>{offer.cnpj}</OfferTableCell>
-                  <OfferTableCell>{offer.fieldOfActivity}</OfferTableCell>
-                  <OfferTableCell>{offer.companyName}</OfferTableCell>
                   <OfferTableCell>{offer.offer}</OfferTableCell>
                   <OfferTableCell>{offer.discountPercentage}</OfferTableCell>
                   <OfferTableCell>{offer.minPurchaseQuantity}</OfferTableCell>
                   <OfferTableCell>{offer.expirationDate}</OfferTableCell>
-
                   <OfferTableCell
                     style={{
                       display: "flex",
@@ -113,32 +105,6 @@ const ManageOffers: React.FC = () => {
         <OfferContainer>
           <OfferForm>
             <h2>{editOffer ? "Editar oferta" : "Adicionar Oferta"}</h2>
-            <FormLabel>CNPJ:</FormLabel>
-            <FormInput
-              type="text"
-              value={newOffer.cnpj}
-              onChange={(e) =>
-                setNewOffer({ ...newOffer, cnpj: e.target.value })
-              }
-            />
-
-            <FormLabel>Área de Atuação:</FormLabel>
-            <FormInput
-              type="text"
-              value={newOffer.fieldOfActivity}
-              onChange={(e) =>
-                setNewOffer({ ...newOffer, fieldOfActivity: e.target.value })
-              }
-            />
-
-            <FormLabel>Nome da Empresa:</FormLabel>
-            <FormInput
-              type="text"
-              value={newOffer.companyName}
-              onChange={(e) =>
-                setNewOffer({ ...newOffer, companyName: e.target.value })
-              }
-            />
 
             <FormLabel>Oferta:</FormLabel>
             <FormInput

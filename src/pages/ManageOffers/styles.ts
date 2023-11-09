@@ -4,11 +4,10 @@ export const Container = styled.div`
   padding: 2rem;
   display: flex;
   flex-direction: row;
-  align-items: center;
 `;
 
 export const OfferContainer = styled.div`
-  display: flex;
+  // display: flex;
   flex-direction: column;
   width: 100%;
 `;
@@ -66,6 +65,9 @@ export const FormInput = styled.input`
 `;
 
 export const OfferTable = styled.table`
+  position: sticky;
+  top: 0;
+  z-index: 100;
   width: 100%;
   border-collapse: collapse;
 `;
@@ -88,4 +90,13 @@ export const OfferTableCell = styled.td`
   text-align: left;
   border-left: 1px solid #ccc;
   border-right: 1px solid #ccc;
+`;
+
+export const StickyOfferTable = styled(OfferTable)`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  background-color: white;
 `;

@@ -57,6 +57,7 @@ const Approvals: React.FC = () => {
     <>
       <Header />
       <Card>
+        <h1>Aprovação de Empresas</h1>
         <ApprovalsTable width="70%">
           <thead>
             <tr>
