@@ -5,6 +5,8 @@ import Register from "./pages/Register"; // Importe o componente de registro
 import RegisterCompany from "./pages/RegisterCompany";
 import Approvals from "./pages/Approvals";
 import ManageOffers from "./pages/ManageOffers";
+import CompanyProfile from "./pages/CompanyProfile";
+import ClientProfile from "./pages/ClientProfile";
 
 function AppRoutes() {
   return (
@@ -17,6 +19,8 @@ function AppRoutes() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/registerCompany" element={<RegisterCompany />} />
+          <Route path="/companyProfile" element={<CompanyProfile />} />
+          <Route path="/clientProfile" element={<ClientProfile />} />
         </Routes>
       </div>
     </Router>
