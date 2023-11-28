@@ -10,6 +10,7 @@ import {
 } from "./styles";
 import Header from "../../components/header/Header";
 import Slider from "react-slick";
+import { useNavigate } from "react-router-dom";
 
 type Offer = {
   id: number;
@@ -145,20 +146,24 @@ const offers: Offer[] = [
 ];
 
 const OfferCardComponent: React.FC<{ offer: Offer }> = ({ offer }) => {
+  const navigate = useNavigate();
+  const handleViewMore = () => {
+    navigate("/offer", { state: { offer } }); // Navigate to '/offer' with offer data
+  };
   return (
     <OfferCard>
       {/* <img src="/path/to/offer-image.jpg" alt={offer.name} />{" "} */}
       <h3>{offer.name}</h3>
       <Description>{offer.description}</Description>
       <ParticipateButton>Participar</ParticipateButton>
-      <ViewMoreButton>Ver Mais</ViewMoreButton>
+      <ViewMoreButton onClick={handleViewMore}>Ver Mais</ViewMoreButton>
       <PriceTag>{`R$ ${offer.price}`}</PriceTag>
     </OfferCard>
   );
 };
 
 // OffersView component
-const ClientOffers: React.FC = () => {
+const MainPage: React.FC = () => {
   const settings = {
     dots: true,
     infinite: true,
@@ -226,4 +231,4 @@ const ClientOffers: React.FC = () => {
   );
 };
 
-export default ClientOffers;
+export default MainPage;
