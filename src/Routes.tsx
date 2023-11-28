@@ -7,6 +7,7 @@ import Approvals from "./pages/Approvals";
 import ManageOffers from "./pages/ManageOffers";
 import CompanyProfile from "./pages/CompanyProfile";
 import ClientProfile from "./pages/ClientProfile";
+import ClientOffers from "./pages/ClientOffers";
 
 function AppRoutes() {
   return (
@@ -21,6 +22,7 @@ function AppRoutes() {
           <Route path="/registerCompany" element={<RegisterCompany />} />
           <Route path="/companyProfile" element={<CompanyProfile />} />
           <Route path="/clientProfile" element={<ClientProfile />} />
+          <Route path="/clientOffers" element={<ClientOffers />} />
         </Routes>
       </div>
     </Router>

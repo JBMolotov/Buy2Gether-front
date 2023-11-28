@@ -4,7 +4,6 @@ export const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: top;
-  height: 100vh;
 `;
 
 export const Card = styled.div`
@@ -21,15 +20,6 @@ export const ProfileHeader = styled.div`
   background-color: #eceff1;
   padding: 20px;
   text-align: center;
-`;
-
-export const ProfileImage = styled.img`
-  border-radius: 50%;
-  border: 5px solid #fff;
-  width: 120px;
-  height: 120px;
-  object-fit: cover;
-  margin-top: -60px;
 `;
 
 export const ProfileName = styled.h2`
