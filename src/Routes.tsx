@@ -23,7 +23,7 @@ function AppRoutes() {
           <Route path="/registerCompany" element={<RegisterCompany />} />
           <Route path="/companyProfile" element={<CompanyProfile />} />
           <Route path="/clientProfile" element={<ClientProfile />} />
-          <Route path="/main" element={<MainPage />} />
+          <Route path="/" element={<MainPage />} />
           <Route path="/offer" element={<OfferCard offer={offer} />} />
         </Routes>
       </div>
