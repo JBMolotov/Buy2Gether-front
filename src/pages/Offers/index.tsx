@@ -67,7 +67,7 @@ type OfferCardProps = {
 const BackButton = () => {
   let navigate = useNavigate();
 
-  return <ReturnButton onClick={() => navigate("/main")}>Voltar</ReturnButton>;
+  return <ReturnButton onClick={() => navigate("/")}>Voltar</ReturnButton>;
 };
 
 const OfferCard: React.FC<OfferCardProps> = ({ offer }) => {
@@ -120,7 +120,7 @@ const OfferCard: React.FC<OfferCardProps> = ({ offer }) => {
           </Detail>
           <br />
           <Detail>
-            <>Criado em:</> {new Date(offer.createdOn).toLocaleDateString()}
+            <>Criado em: </> {new Date(offer.createdOn).toLocaleDateString()}
           </Detail>
           {offer.updatedAt && (
             <Detail>

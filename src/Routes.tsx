@@ -9,6 +9,7 @@ import CompanyProfile from "./pages/CompanyProfile";
 import ClientProfile from "./pages/ClientProfile";
 import OfferCard, { offer } from "./pages/Offers";
 import MainPage from "./pages/Main";
+import ClientOffers from "./pages/ClientOffers";
 
 function AppRoutes() {
   return (
@@ -25,6 +26,7 @@ function AppRoutes() {
           <Route path="/clientProfile" element={<ClientProfile />} />
           <Route path="/" element={<MainPage />} />
           <Route path="/offer" element={<OfferCard offer={offer} />} />
+          <Route path="/myOffers" element={<ClientOffers />} />
         </Routes>
       </div>
     </Router>
