@@ -1,24 +1,48 @@
 import React, { useState } from "react";
 import { Title, MainContainer, LoginContainer, Form } from "./styles";
+import { useNavigate } from "react-router-dom"; // Importe useHistory para redirecionamento
 import TextField from "../../components/textfield";
 import Button from "../../components/button";
 import ShapeLogo from "../../components/shapeLogo";
 import { isEmailValid, isCPFValid } from "../validation"; // Importe as funções de validação
+import axios from "axios";
 
 const Login: React.FC = () => {
+  const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isValid, setIsValid] = useState(true);
 
-  const handleLogin = () => {
-    if (
-      isValid &&
-      (username === "user@email.com" || username === "1234567890") &&
-      password === "password"
-    ) {
-      alert("Login bem-sucedido! Redirecionando para a página de perfil.");
-    } else {
-      alert("Credenciais inválidas. Tente novamente.");
+  const handleLogin = async () => {
+    if (!isValid) {
+      alert("Email ou CPF inválido");
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/clients/search",
+        {
+          email: username,
+          password: password,
+        }
+      );
+
+      const userData = response.data; // Armazene os dados do usuário
+
+      // Verifique se há dados de usuário válidos
+      if (userData) {
+        // Armazene as informações do usuário no localStorage
+        localStorage.setItem("user", JSON.stringify(userData));
+
+        // Redirecionar para a página inicial após o login bem-sucedido
+        navigate("/clientprofile");
+      } else {
+        alert("Credenciais inválidas. Tente novamente.");
+      }
+    } catch (error) {
+      console.error("Erro ao fazer login:", error);
+      alert("Erro ao fazer login. Tente novamente.");
     }
   };
 
@@ -29,7 +53,6 @@ const Login: React.FC = () => {
       setIsValid(false);
     }
   };
-
   return (
     <MainContainer>
       <ShapeLogo />

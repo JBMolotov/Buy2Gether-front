@@ -12,6 +12,7 @@ import {
 } from "./styles";
 import { isEmailValid, isCNPJValid } from "../validation";
 import Modal from "../../components/modal";
+import axios from "axios";
 
 const Register: React.FC = () => {
   const [username, setUsername] = useState("");
@@ -62,6 +63,27 @@ const Register: React.FC = () => {
     }
 
     // Se chegou até aqui, todos os campos estão preenchidos e as validações passaram
+
+    // Registrar na API
+    const data = {
+      name: username,
+      email,
+      password,
+      cnpj: cnpj_cnpj,
+      ramo,
+    };
+
+    axios
+      .post("http://localhost:3000/companies/create", data)
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error.response.data);
+        alert("Erro no registro. Verifique os dados e tente novamente.");
+        return;
+      });
+
     openModal();
   };
 

@@ -18,13 +18,11 @@ type Client = {
   phoneNumber: string;
 };
 
-const clientData: Client = {
-  id: 1,
-  cpf: "123.456.789-10",
-  name: "Paulo Teste",
-  email: "paulo.teste@gmail.com",
-  address: "USP, São Carlos",
-  phoneNumber: "(16) 98765-4321",
+// Get Client data from LocalStorage
+const clientData = JSON.parse(localStorage.getItem("user") || "{}");
+
+const isEmpty = (obj: Client) => {
+  return Object.keys(obj).length === 0;
 };
 
 const ClientProfile: React.FC = () => {
@@ -35,23 +33,41 @@ const ClientProfile: React.FC = () => {
       <Header />
       <Container>
         <Card>
-          <ProfileHeader>
-            <ProfileName>{client.name}</ProfileName>
-          </ProfileHeader>
-          <ProfileDetails>
-            <DetailItem>
-              <strong>CPF:</strong> {client.cpf}
-            </DetailItem>
-            <DetailItem>
-              <strong>Email:</strong> {client.email}
-            </DetailItem>
-            <DetailItem>
-              <strong>Endereço:</strong> {client.address}
-            </DetailItem>
-            <DetailItem>
-              <strong>Celular:</strong> {client.phoneNumber}
-            </DetailItem>
-          </ProfileDetails>
+          {!isEmpty(client) ? (
+            <>
+              <ProfileHeader>
+                <ProfileName>{client.name}</ProfileName>
+              </ProfileHeader>
+              <ProfileDetails>
+                <DetailItem>
+                  <strong>CPF:</strong> {client.cpf}
+                </DetailItem>
+                <DetailItem>
+                  <strong>Email:</strong> {client.email}
+                </DetailItem>
+                <DetailItem>
+                  <strong>Endereço:</strong> {client.address}
+                </DetailItem>
+                <DetailItem>
+                  <strong>Celular:</strong> {client.phoneNumber}
+                </DetailItem>
+              </ProfileDetails>
+            </>
+          ) : (
+            <>
+              <ProfileHeader>
+                <ProfileName>Usuário não encontrado</ProfileName>
+              </ProfileHeader>
+              <ProfileDetails>
+                <p>
+                  Por favor, faça o login para acessar o seu perfil. Caso ainda
+                  não tenha uma conta, faça o seu cadastro.
+                </p>
+
+                <a href="/login">Fazer login</a>
+              </ProfileDetails>
+            </>
+          )}
         </Card>
       </Container>
     </>

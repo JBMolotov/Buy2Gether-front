@@ -8,6 +8,7 @@ import {
   DetailItem,
   Container,
 } from "./styles";
+import axios from "axios";
 
 type Company = {
   id: number;
@@ -18,40 +19,72 @@ type Company = {
   fieldOfActivity: string;
 };
 
-const companyData: Company = {
-  id: 1,
-  cpfCnpj: "00.000.000/0001-00",
-  name: "Tech Innovations Inc.",
-  email: "contact@techinnovations.com",
-  address: "123 Innovation Drive, Tech City",
-  fieldOfActivity: "Software Development",
+// Get Company data from LocalStorage
+const getCompanyData = async (): Promise<Company> => {
+  try {
+    const response = await axios.get(
+      "http://localhost:3000/companies/search/1"
+    );
+    const company = response.data;
+    return company;
+  } catch (error) {
+    console.error("Erro ao buscar companhia:", error);
+    return {} as Company;
+  }
+  // const company = await axios.get("http://localhost:3000/companies/search/1");
+  // return company.data;
+};
+
+const isEmpty = (obj: Company) => {
+  return Object.keys(obj).length === 0;
 };
 
 export const CompanyProfile: React.FC = () => {
-  const company = companyData;
+  const [company, setCompany] = React.useState<Company>({} as Company);
+
+  React.useEffect(() => {
+    getCompanyData().then((company) => {
+      setCompany(company);
+    });
+  }, []);
 
   return (
     <>
       <Header />
       <Container>
         <Card>
-          <ProfileHeader>
-            <ProfileName>{company.name}</ProfileName>
-          </ProfileHeader>
-          <ProfileDetails>
-            <DetailItem>
-              <strong>CNPJ:</strong> {company.cpfCnpj}
-            </DetailItem>
-            <DetailItem>
-              <strong>Email:</strong> {company.email}
-            </DetailItem>
-            <DetailItem>
-              <strong>Endereço:</strong> {company.address}
-            </DetailItem>
-            <DetailItem>
-              <strong>Ramo de Atividade:</strong> {company.fieldOfActivity}
-            </DetailItem>
-          </ProfileDetails>
+          {!isEmpty(company) ? (
+            <>
+              <ProfileHeader>
+                <ProfileName>{company.name}</ProfileName>
+              </ProfileHeader>
+              <ProfileDetails>
+                <DetailItem>
+                  <strong>CNPJ:</strong> {company.cpfCnpj}
+                </DetailItem>
+                <DetailItem>
+                  <strong>Email:</strong> {company.email}
+                </DetailItem>
+                <DetailItem>
+                  <strong>Endereço:</strong> {company.address}
+                </DetailItem>
+                <DetailItem>
+                  <strong>Ramo de Atividade:</strong> {company.fieldOfActivity}
+                </DetailItem>
+              </ProfileDetails>
+            </>
+          ) : (
+            <>
+              <ProfileHeader>
+                <ProfileName>Companhia não encontrada</ProfileName>
+              </ProfileHeader>
+              <ProfileDetails>
+                <p>
+                  Por favor, verifique se a companhia está cadastrada e ativa.
+                </p>
+              </ProfileDetails>
+            </>
+          )}
         </Card>
       </Container>
     </>

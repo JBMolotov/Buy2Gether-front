@@ -10,6 +10,7 @@ import {
 } from "./styles";
 import Header from "../../components/header/Header";
 import Slider from "react-slick";
+import axios from "axios";
 
 type Offer = {
   id: number;
@@ -38,111 +39,22 @@ type Client = {
   phoneNumber: string;
 };
 
-const offers: Offer[] = [
-  {
-    id: 1,
-    name: "Kallas Restaurante",
-    createdOn: new Date("2021-09-01T12:00:00Z"),
-    updatedAt: null,
-    deletedAt: null,
-    price: 19.99,
-    description:
-      "Pacote 30 marmitas. Acompanhamentos: Arroz, Feijão, Carne (Peixe ou frango)",
-    minimalForFreeDelivery: 100.0,
-    minimalForConsolidation: null,
-    totalAmount: 50,
-    isPublic: true,
-    version: 1,
-    clients: [],
-    companyId: 123,
-    isDeleted: false,
-  },
-  {
-    id: 2,
-    name: "Supermarket Deals",
-    createdOn: new Date("2021-09-10T15:00:00Z"),
-    updatedAt: null,
-    deletedAt: null,
-    price: 5.99,
-    description: "Discounted groceries package",
-    minimalForFreeDelivery: 50.0,
-    minimalForConsolidation: null,
-    totalAmount: 150,
-    isPublic: true,
-    version: 1,
-    clients: [],
-    companyId: 456,
-    isDeleted: false,
-  },
-  {
-    id: 3,
-    name: "Gym Membership",
-    createdOn: new Date("2021-09-15T09:30:00Z"),
-    updatedAt: null,
-    deletedAt: null,
-    price: 29.99,
-    description: "Monthly gym subscription with access to all facilities",
-    minimalForFreeDelivery: null,
-    minimalForConsolidation: null,
-    totalAmount: 200,
-    isPublic: true,
-    version: 1,
-    clients: [],
-    companyId: 789,
-    isDeleted: false,
-  },
-  {
-    id: 4,
-    name: "Teste Membership",
-    createdOn: new Date("2021-09-15T09:30:00Z"),
-    updatedAt: null,
-    deletedAt: null,
-    price: 29.99,
-    description: "Monthly gym subscription with access to all facilities",
-    minimalForFreeDelivery: null,
-    minimalForConsolidation: null,
-    totalAmount: 200,
-    isPublic: true,
-    version: 1,
-    clients: [],
-    companyId: 789,
-    isDeleted: false,
-  },
-  {
-    id: 5,
-    name: "Movie Membership",
-    createdOn: new Date("2021-09-15T09:30:00Z"),
-    updatedAt: null,
-    deletedAt: null,
-    price: 29.99,
-    description: "Monthly gym subscription with access to all facilities",
-    minimalForFreeDelivery: null,
-    minimalForConsolidation: null,
-    totalAmount: 200,
-    isPublic: true,
-    version: 1,
-    clients: [],
-    companyId: 789,
-    isDeleted: false,
-  },
-  {
-    id: 6,
-    name: "Pacote de Massagem",
-    createdOn: new Date("2021-09-15T09:30:00Z"),
-    updatedAt: null,
-    deletedAt: null,
-    price: 29.99,
-    description: "Monthly gym subscription with access to all facilities",
-    minimalForFreeDelivery: null,
-    minimalForConsolidation: null,
-    totalAmount: 200,
-    isPublic: true,
-    version: 1,
-    clients: [],
-    companyId: 789,
-    isDeleted: false,
-  },
-];
+// Get offers from API with type offers
+const getOffers = async (): Promise<Offer[]> => {
+  // id from local storage
+  const clientId = JSON.parse(localStorage.getItem("user") || "{}").id;
+  try {
+    const response = await axios.get(
+      "http://localhost:3000/clients/offersJoined/" + clientId
+    );
+    const offers = response.data[0].offers;
+    console.log(response.data[0]);
+    return offers;
+  } catch (error) {
+    console.error("Erro ao buscar ofertas:", error);
+    return [];
+  }
+};
 
 const OfferCardComponent: React.FC<{ offer: Offer }> = ({ offer }) => {
   return (
@@ -193,33 +105,32 @@ const ClientOffers: React.FC = () => {
     ],
   };
 
+  const [offers, setOffers] = React.useState<Offer[]>([]);
+
+  React.useEffect(() => {
+    const fetchOffers = async () => {
+      const offers = await getOffers();
+      setOffers(offers);
+    };
+    fetchOffers();
+  }, []);
+
+  console.log(offers.map((offer) => offer.name));
+
   return (
     <>
       <Header />
-      <SectionTitle>Principais ofertas</SectionTitle>
+      <SectionTitle>Ofertas</SectionTitle>
       <SliderContainer>
         <Slider {...settings}>
-          {offers.map((offer) => (
-            <OfferCardComponent key={offer.id} offer={offer} />
-          ))}
-        </Slider>
-      </SliderContainer>
+          {offers && offers.length === 0 && (
+            <p>Não há ofertas disponíveis no momento.</p>
+          )}
 
-      <SectionTitle>Ofertas para você</SectionTitle>
-      <SliderContainer>
-        <Slider {...settings}>
-          {offers.map((offer) => (
-            <OfferCardComponent key={offer.id} offer={offer} />
-          ))}
-        </Slider>
-      </SliderContainer>
-
-      <SectionTitle>Ofertas populares no momento</SectionTitle>
-      <SliderContainer>
-        <Slider {...settings}>
-          {offers.map((offer) => (
-            <OfferCardComponent key={offer.id} offer={offer} />
-          ))}
+          {offers &&
+            offers.map((offer) => (
+              <OfferCardComponent key={offer.id} offer={offer} />
+            ))}
         </Slider>
       </SliderContainer>
     </>

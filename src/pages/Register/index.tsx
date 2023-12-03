@@ -10,6 +10,8 @@ import {
   ErrorMsg,
 } from "./styles";
 import { isEmailValid, isCPFValid } from "../validation";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Register: React.FC = () => {
   const [username, setUsername] = useState("");
@@ -19,6 +21,8 @@ const Register: React.FC = () => {
 
   const [emailError, setEmailError] = useState("");
   const [cpfError, setCpfError] = useState("");
+
+  const navigate = useNavigate();
 
   const handleRegister = () => {
     // Verificar se todos os campos estão preenchidos
@@ -44,7 +48,28 @@ const Register: React.FC = () => {
 
     // Se chegou até aqui, todos os campos estão preenchidos e as validações passaram
     alert("Registro bem-sucedido!");
-    window.location.href = "/login";
+
+    // Registrar na API
+    const data = {
+      name: username,
+      email,
+      password,
+      cpf: cpf_cnpj,
+    };
+
+    axios
+      .post("http://localhost:3000/clients/create", data)
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.error(error);
+        alert("Erro ao registrar");
+        return;
+      });
+
+    // Redirecionar para a página de login
+    navigate("/login");
   };
 
   return (
