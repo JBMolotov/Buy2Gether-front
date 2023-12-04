@@ -10,7 +10,7 @@ import {
   Form,
   ErrorMsg,
 } from "./styles";
-import { isEmailValid, isCNPJValid } from "../validation";
+import { isEmailValid, isCNPJValid, isPasswordValid } from "../validation";
 import Modal from "../../components/modal";
 import axios from "axios";
 
@@ -23,6 +23,7 @@ const Register: React.FC = () => {
 
   const [emailError, setEmailError] = useState("");
   const [cnpjError, setCnpjError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openModal = () => {
@@ -31,6 +32,17 @@ const Register: React.FC = () => {
 
   const closeModal = () => {
     setIsModalOpen(false);
+    window.location.href = "/login";
+  };
+
+  const maskCnpj = (value: string) => {
+    return value
+      .replace(/\D/g, "")
+      .replace(/(\d{2})(\d)/, "$1.$2")
+      .replace(/(\d{3})(\d)/, "$1.$2")
+      .replace(/(\d{3})(\d)/, "$1/$2")
+      .replace(/(\d{4})(\d)/, "$1-$2")
+      .replace(/(-\d{2})\d+?$/, "$1");
   };
 
   const handleRegister = () => {
@@ -62,6 +74,13 @@ const Register: React.FC = () => {
       setCnpjError("");
     }
 
+    if (!isPasswordValid(password)) {
+      setPasswordError("Senha inválida");
+      return; // Retorna se a senha for inválida
+    } else {
+      setPasswordError("");
+    }
+
     // Se chegou até aqui, todos os campos estão preenchidos e as validações passaram
 
     // Registrar na API
@@ -69,8 +88,9 @@ const Register: React.FC = () => {
       name: username,
       email,
       password,
-      cnpj: cnpj_cnpj,
-      ramo,
+      cpfCnpj: cnpj_cnpj,
+      fieldOfActivity: ramo,
+      address: "Rua teste",
     };
 
     axios
@@ -132,12 +152,13 @@ const Register: React.FC = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
+              <ErrorMsg>{passwordError}</ErrorMsg>
             </div>
             <div>
               <label>CNPJ:</label>
               <TextField
                 type="text"
-                value={cnpj_cnpj}
+                value={maskCnpj(cnpj_cnpj)}
                 onChange={(e) => setCnpj_cnpj(e.target.value)}
               />
               <ErrorMsg>{cnpjError}</ErrorMsg>

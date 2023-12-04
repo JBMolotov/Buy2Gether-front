@@ -9,6 +9,7 @@ import {
   Container,
 } from "./styles";
 import axios from "axios";
+import { url } from "inspector";
 
 type Company = {
   id: number;
@@ -22,8 +23,12 @@ type Company = {
 // Get Company data from LocalStorage
 const getCompanyData = async (): Promise<Company> => {
   try {
+    const url = window.location.href;
+    const id = url.split("?").pop();
+    console.log(id);
+
     const response = await axios.get(
-      "http://localhost:3000/companies/search/1"
+      "http://localhost:3000/companies/search/" + id
     );
     const company = response.data;
     return company;

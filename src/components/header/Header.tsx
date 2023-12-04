@@ -3,6 +3,10 @@ import { Link } from "react-router-dom";
 import { HeaderBar, Nav, Logo } from "./styles";
 
 const Header: React.FC = () => {
+  const logout = () => {
+    localStorage.removeItem("user");
+  };
+
   return (
     <HeaderBar>
       <Link to="/">
@@ -12,7 +16,9 @@ const Header: React.FC = () => {
         <Link to="/explore">Explorar</Link>
         <Link to="/clientOffers">Minhas Ofertas</Link>
         <Link to="/clientProfile">Perfil</Link>
-        <Link to="/login">Sair</Link>
+        <Link to="/login" onClick={logout}>
+          Sair
+        </Link>
       </Nav>
     </HeaderBar>
   );

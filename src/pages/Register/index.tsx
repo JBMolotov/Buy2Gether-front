@@ -9,9 +9,18 @@ import {
   Form,
   ErrorMsg,
 } from "./styles";
-import { isEmailValid, isCPFValid } from "../validation";
+import { isEmailValid, isCPFValid, isPasswordValid } from "../validation";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+
+const maskCPF = (value: string) => {
+  return value
+    .replace(/\D/g, "")
+    .replace(/(\d{3})(\d)/, "$1.$2")
+    .replace(/(\d{3})(\d)/, "$1.$2")
+    .replace(/(\d{3})(\d)/, "$1-$2")
+    .replace(/(-\d{2})\d+?$/, "$1");
+};
 
 const Register: React.FC = () => {
   const [username, setUsername] = useState("");
@@ -21,6 +30,7 @@ const Register: React.FC = () => {
 
   const [emailError, setEmailError] = useState("");
   const [cpfError, setCpfError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
 
   const navigate = useNavigate();
 
@@ -46,6 +56,15 @@ const Register: React.FC = () => {
       setCpfError("");
     }
 
+    if (!isPasswordValid(password)) {
+      setPasswordError(
+        "A senha deve conter pelo menos 8 caracteres, 1 letra maiúscula, 1 letra minúscula e 1 número"
+      );
+      return;
+    } else {
+      setPasswordError("");
+    }
+
     // Se chegou até aqui, todos os campos estão preenchidos e as validações passaram
     alert("Registro bem-sucedido!");
 
@@ -55,21 +74,21 @@ const Register: React.FC = () => {
       email,
       password,
       cpf: cpf_cnpj,
+      phoneNumber: Math.floor(Math.random() * 99999999999),
+      address: "Rua teste, 123",
     };
 
     axios
       .post("http://localhost:3000/clients/create", data)
       .then((response) => {
         console.log(response);
+        navigate("/login");
       })
       .catch((error) => {
         console.error(error);
         alert("Erro ao registrar");
         return;
       });
-
-    // Redirecionar para a página de login
-    navigate("/login");
   };
 
   return (
@@ -103,12 +122,13 @@ const Register: React.FC = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
+            <ErrorMsg>{passwordError}</ErrorMsg>
           </div>
           <div>
             <label>CPF:</label>
             <TextField
               type="text"
-              value={cpf_cnpj}
+              value={maskCPF(cpf_cnpj)}
               onChange={(e) => setCpf_cnpj(e.target.value)}
             />
             <ErrorMsg>{cpfError}</ErrorMsg>

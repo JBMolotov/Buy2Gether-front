@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   OfferCard,
   PriceTag,
@@ -71,11 +71,23 @@ const OfferCardComponent: React.FC<{ offer: Offer }> = ({ offer }) => {
 
 // OffersView component
 const ClientOffers: React.FC = () => {
+  const [offers, setOffers] = React.useState<Offer[]>([]);
+
+  useEffect(() => {
+    const fetchOffers = async () => {
+      const offers = await getOffers();
+      setOffers(offers);
+    };
+    fetchOffers();
+  }, []);
+
+  const slideToShow = offers.length < 3 ? offers.length : 3;
+
   const settings = {
     dots: true,
     infinite: true,
     speed: 500,
-    slidesToShow: 3,
+    slidesToShow: slideToShow,
     slidesToScroll: 3,
     responsive: [
       {
@@ -105,28 +117,17 @@ const ClientOffers: React.FC = () => {
     ],
   };
 
-  const [offers, setOffers] = React.useState<Offer[]>([]);
-
-  React.useEffect(() => {
-    const fetchOffers = async () => {
-      const offers = await getOffers();
-      setOffers(offers);
-    };
-    fetchOffers();
-  }, []);
-
   console.log(offers.map((offer) => offer.name));
 
   return (
     <>
       <Header />
       <SectionTitle>Ofertas</SectionTitle>
+      {offers && offers.length === 0 && (
+        <p>Não há ofertas disponíveis no momento.</p>
+      )}
       <SliderContainer>
         <Slider {...settings}>
-          {offers && offers.length === 0 && (
-            <p>Não há ofertas disponíveis no momento.</p>
-          )}
-
           {offers &&
             offers.map((offer) => (
               <OfferCardComponent key={offer.id} offer={offer} />

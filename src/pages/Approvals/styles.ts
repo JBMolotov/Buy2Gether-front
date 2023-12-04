@@ -70,20 +70,19 @@ export const StatusButton = styled.button<{ reject?: boolean }>`
 `;
 
 interface StatusDisplayProps {
-  status: "Aprovado" | "Rejeitado" | "Pendente";
+  // status: "Aprovado" | "Rejeitado" | "Pendente";
+  isApproved?: boolean;
 }
 
 export const StatusDisplay = styled.span<StatusDisplayProps>`
-  color: ${({ status }) => {
-    switch (status) {
-      case "Aprovado":
+  color: ${({ isApproved }) => {
+    switch (isApproved) {
+      case true:
         return "green";
-      case "Rejeitado":
+      case false:
         return "red";
-      case "Pendente":
-        return "grey";
       default:
-        return "black";
+        return "grey";
     }
   }};
 `;

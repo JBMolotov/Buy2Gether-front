@@ -19,14 +19,24 @@ type Client = {
 };
 
 // Get Client data from LocalStorage
-const clientData = JSON.parse(localStorage.getItem("user") || "{}");
+
+const getClientData = async (): Promise<Client> => {
+  const clientData = await JSON.parse(localStorage.getItem("user") || "{}");
+  return clientData;
+};
 
 const isEmpty = (obj: Client) => {
   return Object.keys(obj).length === 0;
 };
 
 const ClientProfile: React.FC = () => {
-  const client = clientData;
+  const [client, setClient] = React.useState<Client>({} as Client);
+
+  React.useEffect(() => {
+    getClientData().then((data) => {
+      setClient(data);
+    });
+  }, []);
 
   return (
     <>
