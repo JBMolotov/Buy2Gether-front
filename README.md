@@ -43,7 +43,7 @@ Este aplicativo é uma plataforma interativa onde empresas podem se cadastrar pa
 
 ### Execução
 
-- Execute `npm start` ou `yarn start` para iniciar o aplicativo. Ele estará disponível no navegador em `localhost:3000`.
+- Execute `npm run start` ou `yarn run start` para iniciar o aplicativo. Ele estará disponível no navegador em `localhost:3000` (`3001` se o back-end rodar primeiro).
 
 ## Tecnologias Utilizadas
 
