@@ -14,7 +14,7 @@ import { isEmailValid, isCNPJValid } from "../validation";
 import Modal from "../../components/modal";
 import { useNavigate } from "react-router-dom";
 
-const Register: React.FC = () => {
+const RegisterCompany: React.FC = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -196,4 +196,4 @@ const Register: React.FC = () => {
   );
 };
 
-export default Register;
+export default RegisterCompany;

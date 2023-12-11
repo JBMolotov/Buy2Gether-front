@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import ClientLogin from "./pages/ClientLogin";
 import CompanyLogin from "./pages/CompanyLogin";
 import Login from "./pages/Login";
-import Register from "./pages/Register"; // Importe o componente de registro
+import RegisterClient from "./pages/Register"; // Importe o componente de registro
 import RegisterCompany from "./pages/RegisterCompany";
 import Approvals from "./pages/Approvals";
 import ManageOffers from "./pages/ManageOffers";
@@ -24,7 +24,7 @@ function AppRoutes() {
           <Route path="/clientLogin" element={<ClientLogin />} />
           <Route path="/Login" element={<Login />} />
           <Route path="/companyLogin" element={<CompanyLogin />} />
-          <Route path="/register" element={<Register />} />
+          <Route path="/register" element={<RegisterClient />} />
           <Route path="/registerCompany" element={<RegisterCompany />} />
           <Route path="/companyProfile" element={<CompanyProfile />} />
           <Route path="/clientProfile" element={<ClientProfile />} />

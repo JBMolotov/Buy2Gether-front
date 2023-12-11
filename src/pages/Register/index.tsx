@@ -11,18 +11,20 @@ import {
 } from "./styles";
 import { isEmailValid, isCPFValid } from "../validation";
 
-const Register: React.FC = () => {
-  const [username, setUsername] = useState("");
+const RegisterClient: React.FC = () => {
+  const [name, setname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [cpf_cnpj, setCpf_cnpj] = useState("");
+  const [cpf, setcpf] = useState("");
+  const [address, setAddress] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
 
   const [emailError, setEmailError] = useState("");
   const [cpfError, setCpfError] = useState("");
 
-  const handleRegister = () => {
+  const handleRegister = async () => {
     // Verificar se todos os campos estão preenchidos
-    if (!username || !email || !password || !cpf_cnpj) {
+    if (!name || !email || !password || !cpf || !phoneNumber || !address) {
       alert("Por favor, preencha todos os campos.");
       return;
     }
@@ -35,16 +37,44 @@ const Register: React.FC = () => {
       setEmailError("");
     }
 
-    if (!isCPFValid(cpf_cnpj)) {
+    if (!isCPFValid(cpf)) {
       setCpfError("CPF inválido");
       return; // Retorna se o CPF for inválido
     } else {
       setCpfError("");
     }
+    const requestData = {
+      name,
+      email,
+      password,
+      cpf,
+      phoneNumber,
+      address,
+    };
 
-    // Se chegou até aqui, todos os campos estão preenchidos e as validações passaram
-    alert("Registro bem-sucedido!");
-    window.location.href = "/login";
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_BASE_URL}/clients/create`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestData),
+        }
+      );
+      if (response) {
+        const responseData = await response.json();
+        console.log(responseData);
+        alert("Registration succeeded.");
+        window.location.href = "/login";
+      } else {
+        alert("Registration failed. Please try again.");
+      }
+    } catch (networkError) {
+      console.error("Network error:", networkError);
+      alert("Network error. Please try again.");
+    }
   };
 
   return (
@@ -58,8 +88,8 @@ const Register: React.FC = () => {
             <label>Nome:</label>
             <TextField
               type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              value={name}
+              onChange={(e) => setname(e.target.value)}
             />
           </div>
           <div>
@@ -83,8 +113,26 @@ const Register: React.FC = () => {
             <label>CPF:</label>
             <TextField
               type="text"
-              value={cpf_cnpj}
-              onChange={(e) => setCpf_cnpj(e.target.value)}
+              value={cpf}
+              onChange={(e) => setcpf(e.target.value)}
+            />
+            <ErrorMsg>{cpfError}</ErrorMsg>
+          </div>
+          <div>
+            <label>Telefone:</label>
+            <TextField
+              type="text"
+              value={phoneNumber}
+              onChange={(e) => setPhoneNumber(e.target.value)}
+            />
+            <ErrorMsg>{cpfError}</ErrorMsg>
+          </div>
+          <div>
+            <label>Endereço:</label>
+            <TextField
+              type="text"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
             />
             <ErrorMsg>{cpfError}</ErrorMsg>
           </div>
@@ -101,4 +149,4 @@ const Register: React.FC = () => {
   );
 };
 
-export default Register;
+export default RegisterClient;
