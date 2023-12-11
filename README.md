@@ -11,15 +11,15 @@ Este aplicativo é uma plataforma interativa onde empresas podem se cadastrar pa
 - **Cadastro de Empresa:** As empresas podem se registrar no aplicativo através da página `RegisterCompany`.
 - **Login de Empresa:** Após o cadastro, as empresas podem fazer login na página `CompanyLogin`.
 - **Gerenciamento de Ofertas:** Empresas podem criar e gerenciar ofertas na página `ManageOffers`.
-- **Perfil da Empresa:** As empresas podem visualizar e editar seus perfis na página `CompanyProfile`.
+- **Perfil da Empresa:** As empresas podem visualizar seus perfis na página `CompanyProfile`.
 
 ### Para Clientes
 
 - **Cadastro de Cliente:** Os clientes podem se registrar no aplicativo através da página `Register`.
 - **Login de Cliente:** Após o cadastro, os clientes podem fazer login na página `ClientLogin`.
-- **Perfil do Cliente:** Os clientes podem visualizar e editar seus perfis na página `ClientProfile`.
+- **Perfil do Cliente:** Os clientes podem visualizar seus perfis na página `ClientProfile`.
 - **Visualização de Ofertas:** Os clientes podem ver as ofertas disponíveis na página `ClientOffers`.
-- **Participação em Ofertas:** Os clientes podem participar das ofertas acessando a página `OfferCard`, que é acessível através de um ID de oferta específico.
+- **Participação em Ofertas:** Os clientes podem participar das ofertas acessando a página `OfferCard`, que é acessível através de um ID de oferta específico quando se clica em uma oferta.
 
 ### Para Super Admin
 
