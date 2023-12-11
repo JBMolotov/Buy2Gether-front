@@ -1,46 +1,50 @@
-# Getting Started with Create React App
+# Aplicativo de Ofertas para Empresas e Clientes
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Visão Geral
 
-## Available Scripts
+Este aplicativo é uma plataforma interativa onde empresas podem se cadastrar para criar e gerenciar ofertas, enquanto clientes se inscrevem para participar dessas ofertas disponíveis em grupo. Ele oferece um ambiente fácil de usar onde empresas e clientes podem se conectar e colaborar.
 
-In the project directory, you can run:
+## Funcionalidades
 
-### `npm start`
+### Para Empresas
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- **Cadastro de Empresa:** As empresas podem se registrar no aplicativo através da página `RegisterCompany`.
+- **Login de Empresa:** Após o cadastro, as empresas podem fazer login na página `CompanyLogin`.
+- **Gerenciamento de Ofertas:** Empresas podem criar e gerenciar ofertas na página `ManageOffers`.
+- **Perfil da Empresa:** As empresas podem visualizar e editar seus perfis na página `CompanyProfile`.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+### Para Clientes
 
-### `npm test`
+- **Cadastro de Cliente:** Os clientes podem se registrar no aplicativo através da página `Register`.
+- **Login de Cliente:** Após o cadastro, os clientes podem fazer login na página `ClientLogin`.
+- **Perfil do Cliente:** Os clientes podem visualizar e editar seus perfis na página `ClientProfile`.
+- **Visualização de Ofertas:** Os clientes podem ver as ofertas disponíveis na página `ClientOffers`.
+- **Participação em Ofertas:** Os clientes podem participar das ofertas acessando a página `OfferCard`, que é acessível através de um ID de oferta específico.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Para Super Admin
 
-### `npm run build`
+- **Aprovações:** As empresas podem visualizar e aprovar solicitações na página `Approvals`.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Página Principal
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- A página principal `MainPage` serve como ponto de entrada para o aplicativo, oferecendo navegação para as diferentes funcionalidades disponíveis para empresas e clientes.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Instalação e Configuração
 
-### `npm run eject`
+### Requisitos
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+- Node.js
+- NPM ou Yarn
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Instalação
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+1. Clone o repositório do projeto.
+2. Navegue até a pasta do projeto e execute `npm install` ou `yarn install` para instalar as dependências.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+### Execução
 
-## Learn More
+- Execute `npm start` ou `yarn start` para iniciar o aplicativo. Ele estará disponível no navegador em `localhost:3000`.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Tecnologias Utilizadas
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- React
