@@ -64,33 +64,17 @@ export const PriceTag = styled.span`
   background-color: #ff5722;
   color: #fff;
   float: right;
-  padding: 5px 10px;
+  padding: 5px 20px;
   bottom: 30px;
   border-radius: 0 0 0 8px;
   font-weight: bold;
 `;
 
-export const ParticipateButton = styled.button`
-  background-color: #45a049;
-  float: left;
-  color: white;
-  padding: 8px 15px;
-  border: none;
-  border-radius: 0 0 8px 0;
-  cursor: pointer;
-  font-weight: bold;
-  transition: background-color 0.3s ease;
-
-  &:hover {
-    background-color: #4caf50;
-  }
-`;
-
 export const ViewMoreButton = styled.button`
   background-color: #1976d2; // A blue background color
-  float: center;
+  float: left;
   color: white;
-  padding: 8px 9px;
+  padding: 8px 20px;
   border: none;
   border-radius: 0 0 8px 8px;
   cursor: pointer;

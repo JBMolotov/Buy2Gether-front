@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Card,
   Title,
@@ -9,7 +9,7 @@ import {
   Container,
 } from "./styles";
 import Header from "../../components/header/Header";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 type Client = {
   id: number;
@@ -26,7 +26,6 @@ type Offer = {
   createdOn: Date;
   updatedAt: Date | null;
   deletedAt: Date | null;
-  endsAt: Date;
   price: number;
   discount: number;
   description: string;
@@ -35,100 +34,133 @@ type Offer = {
   totalAmount: number;
   isPublic: boolean;
   version: number;
-  clients: Client[]; // This would be an array of Client type objects
-  companyName: string;
+  clients?: Client[];
+  companyId: number;
   isDeleted: boolean;
 };
 
-export const offer = {
-  id: 1,
-  name: "Marmitas do Kallas",
-  createdOn: new Date("2023-11-01T12:00:00Z"),
-  updatedAt: new Date("2023-11-02T12:00:00Z"),
-  endsAt: new Date("2023-11-02T12:00:00Z"),
-  deletedAt: null,
-  price: 19.99,
-  discount: 20,
-  description: "Pacote de 50 marmitas. Acompanhamentos: Arroz, Feijão, Carne",
-  minimalForFreeDelivery: 10.0,
-  minimalForConsolidation: null,
-  totalAmount: 50,
-  isPublic: true,
-  version: 1,
-  clients: [],
-  companyName: "Kallas Restaurante",
-  isDeleted: false,
-};
-
-type OfferCardProps = {
-  offer: Offer;
-};
-
-const BackButton = () => {
+const OfferCard: React.FC = () => {
+  const [offer, setOffer] = useState<Offer | null>(null);
+  const { offerId } = useParams<{ offerId: string }>();
   let navigate = useNavigate();
 
-  return <ReturnButton onClick={() => navigate("/")}>Voltar</ReturnButton>;
-};
+  const fetchOffer = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_BASE_URL}/offers/clientsJoined/${offerId}`
+      );
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      setOffer(data[0]);
+    } catch (error) {
+      console.error("Error fetching data: ", error);
+    }
+  };
 
-const OfferCard: React.FC<OfferCardProps> = ({ offer }) => {
+  useEffect(() => {
+    if (offerId) {
+      fetchOffer();
+    }
+  }, [offerId]);
+
+  const isClient = localStorage.getItem("userType") === "client";
+  const userToken = localStorage.getItem("userToken");
+  const clientIsParticipating = offer?.clients?.some(
+    (client) => client.id === parseInt(userToken || "0")
+  );
+
+  const handleParticipateClick = async () => {
+    if (!userToken || !isClient) {
+      alert("Only clients can participate in offers");
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_BASE_URL}/offers/join/${offer?.id}/${userToken}`,
+        {
+          method: "PUT",
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.text();
+      console.log(result);
+
+      fetchOffer();
+    } catch (error) {
+      console.error("Error participating in offer: ", error);
+    }
+  };
+
   const renderPriceWithDiscount = () => (
     <>
-      R$ {offer.price}{" "}
+      R$ {offer?.price}{" "}
       <span style={{ color: "red" }}>
         {"("}
-        {offer.discount}% de desconto!{")"}
+        {offer?.discount}% de desconto!{")"}
       </span>
     </>
   );
+
+  if (!offer) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <>
       <Header />
       <Container>
         <Card>
-          <BackButton />
-          <PriceTag>{`R$ ${offer.price}`}</PriceTag>
-          <Title>{offer.name}</Title>
+          <ReturnButton />
+          <PriceTag>{`R$ ${offer?.price}`}</PriceTag>
+          <Title>{offer?.name}</Title>
           <Detail>
-            <strong>Empresa:</strong> {offer.companyName}
+            <strong>Empresa:</strong> {offer?.companyId}
           </Detail>
           <Detail>
-            {offer.discount > 0
+            {offer?.discount > 0
               ? renderPriceWithDiscount()
-              : `R$ ${offer.price}`}
+              : `R$ ${offer?.price}`}
           </Detail>
           <Detail>
-            <strong>Descrição:</strong> {offer.description}
+            <strong>Descrição:</strong> {offer?.description}
           </Detail>
           <Detail>
             <strong>Mínimo p/ Entrega Grátis: </strong>
-            {offer.minimalForFreeDelivery} participantes
+            {offer?.minimalForFreeDelivery} participantes
           </Detail>
           <Detail>
-            <strong>Pedidos Disponíveis: </strong> {offer.totalAmount}
+            <strong>Pedidos Disponíveis: </strong> {offer?.totalAmount}
           </Detail>
           <Detail>
-            <strong>{offer.clients.length} </strong>
+            <strong>{(offer?.clients ?? []).length} </strong>
             clientes participando desta oferta!
           </Detail>
           <Detail>
-            <strong>Oferta termina em: </strong>
-            {new Date(offer.endsAt).toLocaleDateString()}
-          </Detail>
-          <Detail>
-            <strong>Oferta Pública:</strong> {offer.isPublic ? "Sim" : "Não"}
+            <strong>Oferta Pública:</strong> {offer?.isPublic ? "Sim" : "Não"}
           </Detail>
           <br />
           <Detail>
-            <>Criado em: </> {new Date(offer.createdOn).toLocaleDateString()}
+            <>Criado em: </>{" "}
+            {offer?.createdOn && new Date(offer.createdOn).toLocaleDateString()}
           </Detail>
-          {offer.updatedAt && (
+          {offer?.updatedAt && (
             <Detail>
               <>Última atualização:</>{" "}
               {new Date(offer.updatedAt).toLocaleDateString()}
             </Detail>
           )}
-          <ParticipateButton>Participar</ParticipateButton>
+          {isClient && (
+            <ParticipateButton onClick={handleParticipateClick}>
+              {clientIsParticipating ? "Participando" : "Participar"}
+            </ParticipateButton>
+          )}
         </Card>
       </Container>
     </>

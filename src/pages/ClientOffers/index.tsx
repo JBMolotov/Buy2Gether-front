@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import {
   Container,
   OfferContainer,
@@ -20,15 +21,15 @@ type Client = {
   email: string;
   address: string;
   phoneNumber: string;
+  offers?: Offer[];
 };
 
-type OfferItem = {
+type Offer = {
   id: number;
   name: string;
   createdOn: Date;
   updatedAt: Date | null;
   deletedAt: Date | null;
-  endsAt: Date;
   price: number;
   discount: number;
   description: string;
@@ -37,86 +38,66 @@ type OfferItem = {
   totalAmount: number;
   isPublic: boolean;
   version: number;
-  clients: Client[];
-  companyName: string;
+  clients?: Client[];
+  companyId: number;
   isDeleted: boolean;
 };
 
-export const offersData = [
-  {
-    id: 1,
-    name: "Marmitas do Kallas",
-    createdOn: new Date("2023-11-01T12:00:00Z"),
-    updatedAt: new Date("2023-11-02T12:00:00Z"),
-    endsAt: new Date("2023-12-02T12:00:00Z"),
-    deletedAt: null,
-    price: 19.99,
-    discount: 20,
-    description: "Pacote de 50 marmitas. Acompanhamentos: Arroz, Feijão, Carne",
-    minimalForFreeDelivery: 10.0,
-    minimalForConsolidation: 5,
-    totalAmount: 50,
-    isPublic: true,
-    version: 1,
-    clients: [],
-    companyName: "Kallas Restaurante",
-    isDeleted: false,
-  },
-  {
-    id: 2,
-    name: "Peixes do Centro",
-    createdOn: new Date("2023-11-01T12:00:00Z"),
-    updatedAt: new Date("2023-11-02T12:00:00Z"),
-    endsAt: new Date("2023-12-01T18:00:00Z"),
-    deletedAt: null,
-    price: 19.99,
-    discount: 20,
-    description: "Pacote de 50 peixes à venda. Acompanhamentos: Limão.",
-    minimalForFreeDelivery: 10.0,
-    minimalForConsolidation: 8,
-    totalAmount: 50,
-    isPublic: true,
-    version: 1,
-    clients: [],
-    companyName: "Peixes Restaurante",
-    isDeleted: false,
-  },
-  {
-    id: 3,
-    name: "Teste de Oferta Vencida",
-    createdOn: new Date("2023-11-01T12:00:00Z"),
-    updatedAt: new Date("2023-11-02T12:00:00Z"),
-    endsAt: new Date("2023-11-28T18:00:00Z"),
-    deletedAt: null,
-    price: 19.99,
-    discount: 20,
-    description: "Pacote de 50 peixes à venda. Acompanhamentos: Limão.",
-    minimalForFreeDelivery: 10.0,
-    minimalForConsolidation: 8,
-    totalAmount: 50,
-    isPublic: true,
-    version: 1,
-    clients: [],
-    companyName: "Peixes Restaurante",
-    isDeleted: false,
-  },
-];
-
 const ClientOffers: React.FC = () => {
-  const [offers, setOffers] = useState<OfferItem[]>(offersData);
-  const [editOffer, setEditOffer] = useState<OfferItem | null>(null);
+  const [offers, setOffers] = useState<Offer[]>([]);
+  const userId = localStorage.getItem("userToken") || "0";
   const navigate = useNavigate();
 
-  const handleDeleteOffer = (id: number) => {
-    const updatedOffers = offers.filter((offer) => offer.id !== id);
-    setOffers(updatedOffers);
-    if (editOffer && editOffer.id === id) {
-      setEditOffer(null);
+  const handleUnparticipateClick = async (offerId: number) => {
+    if (userId === "0") {
+      alert("You must be logged in to unparticipate in offers");
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_BASE_URL}/offers/join/${offerId}/${userId}`,
+        {
+          method: "PUT",
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.text();
+      console.log(result);
+      await fetchOffers();
+    } catch (error) {
+      console.error("Error unparticipating in offer: ", error);
     }
   };
 
-  const handleViewMore = () => {
-    navigate("/offer");
+  const fetchOffers = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_BASE_URL}/clients/offersJoined/${userId}`
+      );
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const clients = await response.json();
+      const offersFromClients = clients.flatMap(
+        (client: Client) => client.offers || []
+      );
+      setOffers(offersFromClients);
+    } catch (error) {
+      console.error("Error fetching offers: ", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchOffers();
+  }, []);
+
+  const handleViewMore = (offerId: number) => {
+    navigate(`/offer/${offerId}`);
   };
 
   const isOfferExpired = (offerEndsAt: Date) => {
@@ -135,9 +116,9 @@ const ClientOffers: React.FC = () => {
                 <OfferTableHeader>Oferta</OfferTableHeader>
                 <OfferTableHeader>Nome da Empresa</OfferTableHeader>
                 <OfferTableHeader>Preço (R$)</OfferTableHeader>
-                <OfferTableHeader>Desconto (%)</OfferTableHeader>
+                {/* <OfferTableHeader>Desconto (%)</OfferTableHeader> */}
                 <OfferTableHeader>Quantidade Mínima</OfferTableHeader>
-                <OfferTableHeader>Data de Validade</OfferTableHeader>
+                {/* <OfferTableHeader>Data de Validade</OfferTableHeader> */}
                 <OfferTableHeader>Última Atualização</OfferTableHeader>
                 <OfferTableHeader>
                   Total de Ofertas Disponíveis
@@ -151,33 +132,11 @@ const ClientOffers: React.FC = () => {
               {offers.map((offer) => (
                 <OfferTableRow key={offer.id}>
                   <OfferTableCell>{offer.name}</OfferTableCell>
-                  <OfferTableCell>{offer.companyName}</OfferTableCell>
+                  <OfferTableCell>{offer.companyId}</OfferTableCell>
                   <OfferTableCell>{offer.price}</OfferTableCell>
-                  <OfferTableCell>{offer.discount}</OfferTableCell>
+                  {/* <OfferTableCell>{offer.discount}</OfferTableCell> */}
                   <OfferTableCell>
                     {offer.minimalForConsolidation} participantes
-                  </OfferTableCell>
-                  <OfferTableCell>
-                    {isOfferExpired(offer.endsAt) ? (
-                      <span style={{ color: "gray" }}>
-                        Consolidada em:{" "}
-                        {offer.endsAt.toLocaleTimeString([], {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                          hour12: false,
-                        })}
-                        , {offer.endsAt.toLocaleDateString()}
-                      </span>
-                    ) : (
-                      <>
-                        {offer.endsAt.toLocaleTimeString([], {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                          hour12: false,
-                        })}
-                        , {offer.endsAt.toLocaleDateString()}
-                      </>
-                    )}
                   </OfferTableCell>
                   <OfferTableCell>
                     {offer.updatedAt
@@ -198,16 +157,18 @@ const ClientOffers: React.FC = () => {
                       justifyContent: "space-evenly",
                     }}
                   >
-                    <ViewMoreButton onClick={() => handleViewMore()}>
+                    <ViewMoreButton onClick={() => handleViewMore(offer.id)}>
                       Ver Mais
                     </ViewMoreButton>
-                    {!isOfferExpired(offer.endsAt) && (
-                      <UnparticipateButton
-                        onClick={() => handleDeleteOffer(offer.id)}
-                      >
-                        Desistir
-                      </UnparticipateButton>
-                    )}
+                    {/* {!isOfferExpired(offer.endsAt) && ( */}
+                    <UnparticipateButton
+                      onClick={() => handleUnparticipateClick(offer.id)}
+                    >
+                      Desistir
+                    </UnparticipateButton>
+                    {/* ) 
+                    }
+                    */}
                   </OfferTableCell>
                 </OfferTableRow>
               ))}

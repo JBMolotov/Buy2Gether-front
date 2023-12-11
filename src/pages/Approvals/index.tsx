@@ -1,56 +1,62 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Card from "../../components/card/Card";
 import { ApprovalsTable, StatusButton, StatusDisplay } from "./styles";
 import Header from "../../components/header/Header";
 
 type ApprovalItem = {
   id: number;
-  cnpj: string;
+  cpfCnpj: string;
   fieldOfActivity: string;
   companyName: string;
-  status: "Aprovado" | "Rejeitado" | "Pendente";
+  isApproved: boolean;
   approver: string;
 };
 
-const initialData: ApprovalItem[] = [
-  {
-    id: 1,
-    cnpj: "12.345.678/0001-91",
-    fieldOfActivity: "Tecnologia",
-    companyName: "TickTech",
-    status: "Pendente",
-    approver: "Super Admin",
-  },
-  {
-    id: 2,
-    cnpj: "23.456.789/0001-92",
-    fieldOfActivity: "Finanças",
-    companyName: "FinTeste",
-    status: "Pendente",
-    approver: "Super Admin",
-  },
-  {
-    id: 3,
-    cnpj: "34.567.890/0001-93",
-    fieldOfActivity: "Saúde",
-    companyName: "TesteCura",
-    status: "Pendente",
-    approver: "Super Admin",
-  },
-];
-
 const Approvals: React.FC = () => {
-  const [items, setItems] = useState(initialData);
+  const [items, setItems] = useState<ApprovalItem[]>([]);
 
-  const handleStatusChange = (
-    itemId: number,
-    newStatus: "Aprovado" | "Rejeitado"
-  ) => {
-    setItems(
-      items.map((item) =>
-        item.id === itemId ? { ...item, status: newStatus } : item
-      )
-    );
+  useEffect(() => {
+    fetch(`${process.env.REACT_APP_BASE_URL}/companies/searchAll`)
+      .then((response) => response.json())
+      .then((data) => setItems(data))
+      .catch((error) => console.error("Error fetching data: ", error));
+  }, []);
+
+  const getStatus = (
+    isApproved: boolean | undefined
+  ): "Pendente" | "Aprovado" | "Rejeitado" => {
+    if (isApproved === null || isApproved === undefined) {
+      return "Pendente";
+    }
+    return isApproved ? "Aprovado" : "Rejeitado";
+  };
+
+  const handleStatusChange = async (itemId: number, isApproved: boolean) => {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_BASE_URL}/superAdmin/approveCompany/${itemId}`,
+        {
+          method: "POST", // or 'PUT'
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ isApproved }),
+        }
+      );
+
+      if (response.ok) {
+        setItems(
+          items.map((item) =>
+            item.id === itemId ? { ...item, isApproved: isApproved } : item
+          )
+        );
+      } else {
+        // Handle errors
+        console.error("Error updating status");
+      }
+    } catch (error) {
+      console.error("Error: ", error);
+    }
   };
 
   return (
@@ -75,31 +81,33 @@ const Approvals: React.FC = () => {
               <tr key={item.id}>
                 <td>{item.id}</td>
                 <td>{item.companyName}</td>
-                <td>{item.cnpj}</td>
+                <td>{item.cpfCnpj}</td>
                 <td>{item.fieldOfActivity}</td>
                 <td>
-                  <StatusDisplay status={item.status}>
-                    {item.status.charAt(0).toUpperCase() + item.status.slice(1)}
+                  <StatusDisplay status={getStatus(item.isApproved)}>
+                    {getStatus(item.isApproved)}
                   </StatusDisplay>
                 </td>
                 <td>
-                  {item.status === "Pendente" && (
+                  {getStatus(item.isApproved) === "Pendente" && (
                     <>
                       <StatusButton
-                        onClick={() => handleStatusChange(item.id, "Aprovado")}
+                        onClick={() => handleStatusChange(item.id, true)}
                       >
                         Aprovar
                       </StatusButton>
                       <StatusButton
                         reject
-                        onClick={() => handleStatusChange(item.id, "Rejeitado")}
+                        onClick={() => handleStatusChange(item.id, false)}
                       >
                         Reprovar
                       </StatusButton>
                     </>
                   )}
-                  {item.status === "Aprovado" && <span>Empresa aprovada</span>}
-                  {item.status === "Rejeitado" && (
+                  {getStatus(item.isApproved) === "Aprovado" && (
+                    <span>Empresa aprovada</span>
+                  )}
+                  {getStatus(item.isApproved) === "Rejeitado" && (
                     <span>Empresa reprovada</span>
                   )}
                 </td>

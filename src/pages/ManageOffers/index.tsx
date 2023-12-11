@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Container,
   FormInput,
@@ -11,51 +11,116 @@ import {
   OfferTableRow,
 } from "./styles";
 import Header from "../../components/header/Header";
-import { OfferItem } from "../../types/offer";
 import Button from "../../components/button";
 
+export type OfferItem = {
+  id: number;
+  name: string;
+  createdOn: string;
+  updatedAt: string | null;
+  deletedAt: string | null;
+  price: number;
+  description: string;
+  minimalForFreeDelivery: number;
+  minimalForConsolidation: number;
+  totalAmount: number;
+  isPublic: boolean;
+  version: number;
+  companyId: number;
+  isDeleted: boolean;
+};
+
 const ManageOffers: React.FC = () => {
-  const initialOffer: OfferItem = {
-    id: Math.floor(Math.random() * 1000),
-    cnpj: "",
-    fieldOfActivity: "",
-    companyName: "",
-    offer: "",
-    discountPercentage: 0,
-    minPurchaseQuantity: 0,
-    expirationDate: "",
+  const emptyOffer: OfferItem = {
+    id: 0,
+    name: "",
+    createdOn: "",
+    updatedAt: null,
+    deletedAt: null,
+    price: 0,
+    description: "",
+    minimalForFreeDelivery: 0,
+    minimalForConsolidation: 0,
+    totalAmount: 0,
+    isPublic: false,
+    version: 0,
+    companyId: 0,
+    isDeleted: false,
   };
 
   const [offers, setOffers] = useState<OfferItem[]>([]);
-  const [newOffer, setNewOffer] = useState<OfferItem>(initialOffer);
-  const [editOffer, setEditOffer] = useState<OfferItem | null>(null);
+  const [currentOffer, setCurrentOffer] = useState<OfferItem>(emptyOffer);
+  const companyId = localStorage.getItem("userToken");
 
-  const handleAddOffer = () => {
-    if (editOffer) {
-      const updatedOffers = offers.map((offer) =>
-        offer.id === editOffer.id ? newOffer : offer
+  const fetchOffers = async () => {
+    try {
+      if (!companyId) {
+        console.error("Company ID not found");
+        return;
+      }
+      const response = await fetch(
+        `${process.env.REACT_APP_BASE_URL}/offers/search/company/${companyId}`
       );
-      setOffers(updatedOffers);
-      setEditOffer(null);
-    } else {
-      setOffers([...offers, newOffer]);
-    }
-    setNewOffer(initialOffer);
-  };
-
-  const handleEditOffer = (offer: OfferItem) => {
-    setEditOffer(offer);
-    setNewOffer(offer);
-  };
-
-  const handleDeleteOffer = (id: number) => {
-    const updatedOffers = offers.filter((offer) => offer.id !== id);
-    setOffers(updatedOffers);
-    if (editOffer && editOffer.id === id) {
-      setEditOffer(null);
+      const data = await response.json();
+      setOffers(data);
+    } catch (error) {
+      console.error("Error fetching offers:", error);
     }
   };
 
+  useEffect(() => {
+    fetchOffers();
+  }, []);
+
+  const handleEditButtonClick = (offer: OfferItem) => {
+    setCurrentOffer(offer);
+  };
+
+  const handleAddOrUpdateOffer = async () => {
+    const endpoint = currentOffer.id
+      ? `${process.env.REACT_APP_BASE_URL}/offers/update/${currentOffer.id}`
+      : `${process.env.REACT_APP_BASE_URL}/offers/create/${companyId}`;
+    const method = currentOffer.id ? "PUT" : "POST";
+    const offerData = {
+      ...currentOffer,
+      companyId: companyId,
+      isPublic: false, // or true, depending on your logic
+      isDeleted: false,
+      createdOn: currentOffer.id
+        ? currentOffer.createdOn
+        : new Date().toISOString(),
+      updatedAt: currentOffer.id ? new Date().toISOString() : null,
+      deletedAt: null, // or the appropriate value
+    };
+    try {
+      await fetch(endpoint, {
+        method: method,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(offerData),
+      });
+      fetchOffers();
+    } catch (error) {
+      console.error("Error submitting offer:", error);
+    }
+
+    setCurrentOffer(emptyOffer);
+  };
+
+  const handleDeleteOffer = async (id: number) => {
+    try {
+      await fetch(`${process.env.REACT_APP_BASE_URL}/offers/delete/${id}`, {
+        method: "DELETE",
+      });
+      fetchOffers();
+    } catch (error) {
+      console.error("Error deleting offer:", error);
+    }
+  };
+  const handleResetForm = () => {
+    setCurrentOffer(emptyOffer);
+  };
   return (
     <>
       <Header />
@@ -66,20 +131,24 @@ const ManageOffers: React.FC = () => {
           <OfferTable>
             <thead>
               <OfferTableRow>
-                <OfferTableHeader>Oferta</OfferTableHeader>
-                <OfferTableHeader>Desconto (%)</OfferTableHeader>
-                <OfferTableHeader>Quantidade Mínima</OfferTableHeader>
-                <OfferTableHeader>Data de Validade</OfferTableHeader>
+                <OfferTableHeader>Nome</OfferTableHeader>
+                <OfferTableHeader>Preço</OfferTableHeader>
+                <OfferTableHeader>Descrição</OfferTableHeader>
+                <OfferTableHeader>
+                  Quantidade Mínima para Entrega Gratuita
+                </OfferTableHeader>
                 <OfferTableHeader>Ações</OfferTableHeader>
               </OfferTableRow>
             </thead>
             <tbody>
               {offers.map((offer) => (
                 <OfferTableRow key={offer.id}>
-                  <OfferTableCell>{offer.offer}</OfferTableCell>
-                  <OfferTableCell>{offer.discountPercentage}</OfferTableCell>
-                  <OfferTableCell>{offer.minPurchaseQuantity}</OfferTableCell>
-                  <OfferTableCell>{offer.expirationDate}</OfferTableCell>
+                  <OfferTableCell>{offer.name}</OfferTableCell>
+                  <OfferTableCell>{offer.price}</OfferTableCell>
+                  <OfferTableCell>{offer.description}</OfferTableCell>
+                  <OfferTableCell>
+                    {offer.minimalForFreeDelivery}
+                  </OfferTableCell>
                   <OfferTableCell
                     style={{
                       display: "flex",
@@ -89,7 +158,7 @@ const ManageOffers: React.FC = () => {
                   >
                     <Button
                       text="Editar"
-                      onClick={() => handleEditOffer(offer)}
+                      onClick={() => handleEditButtonClick(offer)}
                     />
                     <Button
                       text="Excluir"
@@ -104,53 +173,76 @@ const ManageOffers: React.FC = () => {
 
         <OfferContainer>
           <OfferForm>
-            <h2>{editOffer ? "Editar oferta" : "Adicionar Oferta"}</h2>
+            <h2>{currentOffer.id ? "Editar oferta" : "Adicionar Oferta"}</h2>
 
-            <FormLabel>Oferta:</FormLabel>
+            <FormLabel>Nome:</FormLabel>
             <FormInput
               type="text"
-              value={newOffer.offer}
+              value={currentOffer.name}
               onChange={(e) =>
-                setNewOffer({ ...newOffer, offer: e.target.value })
+                setCurrentOffer({ ...currentOffer, name: e.target.value })
               }
             />
 
-            <FormLabel>Desconto (%):</FormLabel>
+            <FormLabel>Preço:</FormLabel>
             <FormInput
               type="number"
-              value={newOffer.discountPercentage}
+              value={currentOffer.price}
               onChange={(e) =>
-                setNewOffer({
-                  ...newOffer,
-                  discountPercentage: +e.target.value,
+                setCurrentOffer({ ...currentOffer, price: +e.target.value })
+              }
+            />
+
+            <FormLabel>Descrição:</FormLabel>
+            <FormInput
+              type="text"
+              value={currentOffer.description}
+              onChange={(e) =>
+                setCurrentOffer({
+                  ...currentOffer,
+                  description: e.target.value,
                 })
               }
             />
 
-            <FormLabel>Quantidade Mínima:</FormLabel>
+            <FormLabel>Quantidade Mínima para Entrega Gratuita:</FormLabel>
             <FormInput
               type="number"
-              value={newOffer.minPurchaseQuantity}
+              value={currentOffer.minimalForFreeDelivery}
               onChange={(e) =>
-                setNewOffer({
-                  ...newOffer,
-                  minPurchaseQuantity: +e.target.value,
+                setCurrentOffer({
+                  ...currentOffer,
+                  minimalForFreeDelivery: +e.target.value,
                 })
               }
             />
 
-            <FormLabel>Data de Validade:</FormLabel>
+            <FormLabel>Quantidade Mínima para Consolidação:</FormLabel>
             <FormInput
-              type="text"
-              value={newOffer.expirationDate}
+              type="number"
+              value={currentOffer.minimalForConsolidation}
               onChange={(e) =>
-                setNewOffer({ ...newOffer, expirationDate: e.target.value })
+                setCurrentOffer({
+                  ...currentOffer,
+                  minimalForConsolidation: +e.target.value,
+                })
               }
             />
 
+            <FormLabel>Total de Quantidade:</FormLabel>
+            <FormInput
+              type="number"
+              value={currentOffer.totalAmount}
+              onChange={(e) =>
+                setCurrentOffer({
+                  ...currentOffer,
+                  totalAmount: +e.target.value,
+                })
+              }
+            />
             <Button
-              text={editOffer ? "Salvar" : "Adicionar Oferta"}
-              onClick={handleAddOffer}
+              text={currentOffer.id ? "Salvar" : "Adicionar Oferta"}
+              onClick={handleAddOrUpdateOffer}
             />
           </OfferForm>
         </OfferContainer>

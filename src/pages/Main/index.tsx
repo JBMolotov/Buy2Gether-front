@@ -1,11 +1,10 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   OfferCard,
   PriceTag,
   Description,
   SectionTitle,
   SliderContainer,
-  ParticipateButton,
   ViewMoreButton,
 } from "./styles";
 import Header from "../../components/header/Header";
@@ -39,123 +38,16 @@ type Client = {
   phoneNumber: string;
 };
 
-const offers: Offer[] = [
-  {
-    id: 1,
-    name: "Kallas Restaurante",
-    createdOn: new Date("2021-09-01T12:00:00Z"),
-    updatedAt: null,
-    deletedAt: null,
-    price: 19.99,
-    description:
-      "Pacote 30 marmitas. Acompanhamentos: Arroz, Feijão, Carne (Peixe ou frango)",
-    minimalForFreeDelivery: 100.0,
-    minimalForConsolidation: null,
-    totalAmount: 50,
-    isPublic: true,
-    version: 1,
-    clients: [],
-    companyId: 123,
-    isDeleted: false,
-  },
-  {
-    id: 2,
-    name: "Supermarket Deals",
-    createdOn: new Date("2021-09-10T15:00:00Z"),
-    updatedAt: null,
-    deletedAt: null,
-    price: 5.99,
-    description: "Discounted groceries package",
-    minimalForFreeDelivery: 50.0,
-    minimalForConsolidation: null,
-    totalAmount: 150,
-    isPublic: true,
-    version: 1,
-    clients: [],
-    companyId: 456,
-    isDeleted: false,
-  },
-  {
-    id: 3,
-    name: "Gym Membership",
-    createdOn: new Date("2021-09-15T09:30:00Z"),
-    updatedAt: null,
-    deletedAt: null,
-    price: 29.99,
-    description: "Monthly gym subscription with access to all facilities",
-    minimalForFreeDelivery: null,
-    minimalForConsolidation: null,
-    totalAmount: 200,
-    isPublic: true,
-    version: 1,
-    clients: [],
-    companyId: 789,
-    isDeleted: false,
-  },
-  {
-    id: 4,
-    name: "Teste Membership",
-    createdOn: new Date("2021-09-15T09:30:00Z"),
-    updatedAt: null,
-    deletedAt: null,
-    price: 29.99,
-    description: "Monthly gym subscription with access to all facilities",
-    minimalForFreeDelivery: null,
-    minimalForConsolidation: null,
-    totalAmount: 200,
-    isPublic: true,
-    version: 1,
-    clients: [],
-    companyId: 789,
-    isDeleted: false,
-  },
-  {
-    id: 5,
-    name: "Movie Membership",
-    createdOn: new Date("2021-09-15T09:30:00Z"),
-    updatedAt: null,
-    deletedAt: null,
-    price: 29.99,
-    description: "Monthly gym subscription with access to all facilities",
-    minimalForFreeDelivery: null,
-    minimalForConsolidation: null,
-    totalAmount: 200,
-    isPublic: true,
-    version: 1,
-    clients: [],
-    companyId: 789,
-    isDeleted: false,
-  },
-  {
-    id: 6,
-    name: "Pacote de Massagem",
-    createdOn: new Date("2021-09-15T09:30:00Z"),
-    updatedAt: null,
-    deletedAt: null,
-    price: 29.99,
-    description: "Monthly gym subscription with access to all facilities",
-    minimalForFreeDelivery: null,
-    minimalForConsolidation: null,
-    totalAmount: 200,
-    isPublic: true,
-    version: 1,
-    clients: [],
-    companyId: 789,
-    isDeleted: false,
-  },
-];
-
 const OfferCardComponent: React.FC<{ offer: Offer }> = ({ offer }) => {
   const navigate = useNavigate();
   const handleViewMore = () => {
-    navigate("/offer", { state: { offer } }); // Navigate to '/offer' with offer data
+    navigate(`/offer/${offer.id}`);
   };
   return (
     <OfferCard>
       {/* <img src="/path/to/offer-image.jpg" alt={offer.name} />{" "} */}
       <h3>{offer.name}</h3>
       <Description>{offer.description}</Description>
-      <ParticipateButton>Participar</ParticipateButton>
       <ViewMoreButton onClick={handleViewMore}>Ver Mais</ViewMoreButton>
       <PriceTag>{`R$ ${offer.price}`}</PriceTag>
     </OfferCard>
@@ -164,6 +56,15 @@ const OfferCardComponent: React.FC<{ offer: Offer }> = ({ offer }) => {
 
 // OffersView component
 const MainPage: React.FC = () => {
+  const [offers, setOffers] = useState<Offer[]>([]);
+  useEffect(() => {
+    fetch(`${process.env.REACT_APP_BASE_URL}/offers/searchAll`)
+      .then((response) => response.json())
+      .then((data) => {
+        setOffers(data);
+      })
+      .catch((error) => console.error("Error fetching data:", error));
+  }, []);
   const settings = {
     dots: true,
     infinite: true,

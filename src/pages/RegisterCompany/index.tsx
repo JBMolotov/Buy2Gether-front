@@ -12,57 +12,87 @@ import {
 } from "./styles";
 import { isEmailValid, isCNPJValid } from "../validation";
 import Modal from "../../components/modal";
+import { useNavigate } from "react-router-dom";
 
 const Register: React.FC = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [cnpj_cnpj, setCnpj_cnpj] = useState("");
+  const [cpf_cnpj, setCpf_cnpj] = useState("");
   const [ramo, setRamo] = useState("");
+  const [address, setAddress] = useState("");
 
   const [emailError, setEmailError] = useState("");
   const [cnpjError, setCnpjError] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+  const navigate = useNavigate();
   const openModal = () => {
     setIsModalOpen(true);
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
+    navigate("/login");
   };
 
-  const handleRegister = () => {
-    // Verificar se todos os campos estão preenchidos
-    if (
-      !username ||
-      !email ||
-      !password ||
-      !cnpj_cnpj ||
-      !ramo ||
-      ramo === ""
-    ) {
+  const handleRegister = async () => {
+    if (!username || !email || !password || !cpf_cnpj || !ramo || ramo === "") {
       alert("Por favor, preencha todos os campos.");
       return;
     }
 
-    // Validar o email e CPF
     if (!isEmailValid(email)) {
       setEmailError("Email inválido");
-      return; // Retorna se o email for inválido
+      return;
     } else {
       setEmailError("");
     }
 
-    if (!isCNPJValid(cnpj_cnpj)) {
+    if (!isCNPJValid(cpf_cnpj)) {
       setCnpjError("CNPJ inválido");
-      return; // Retorna se o Cnpj for inválido
+      return;
     } else {
       setCnpjError("");
     }
 
-    // Se chegou até aqui, todos os campos estão preenchidos e as validações passaram
-    openModal();
+    const requestData = {
+      cpfCnpj: cpf_cnpj,
+      name: username,
+      email: email,
+      password: password,
+      address: address,
+      fieldOfActivity: ramo,
+    };
+
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_BASE_URL}/companies/create`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestData),
+        }
+      );
+
+      if (response) {
+        try {
+          const responseData = await response.json();
+          openModal();
+        } catch (parseError) {
+          console.error("Error parsing response:", parseError);
+          alert(
+            "Registration succeeded, but there was an error processing the response."
+          );
+        }
+      } else {
+        alert("Registration failed. Please try again.");
+      }
+    } catch (networkError) {
+      console.error("Network error:", networkError);
+      alert("Network error. Please try again.");
+    }
   };
 
   return (
@@ -115,10 +145,18 @@ const Register: React.FC = () => {
               <label>CNPJ:</label>
               <TextField
                 type="text"
-                value={cnpj_cnpj}
-                onChange={(e) => setCnpj_cnpj(e.target.value)}
+                value={cpf_cnpj}
+                onChange={(e) => setCpf_cnpj(e.target.value)}
               />
               <ErrorMsg>{cnpjError}</ErrorMsg>
+            </div>
+            <div>
+              <label>Endereço:</label>
+              <TextField
+                type="text"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+              />
             </div>
             <div>
               <label>Ramo de atuação:</label>
