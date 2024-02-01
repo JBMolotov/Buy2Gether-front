@@ -11,7 +11,6 @@ import {
 } from "./styles";
 import { isEmailValid, isCPFValid, isPasswordValid } from "../validation";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 
 const maskCPF = (value: string) => {
   return value
@@ -31,8 +30,6 @@ const Register: React.FC = () => {
   const [emailError, setEmailError] = useState("");
   const [cpfError, setCpfError] = useState("");
   const [passwordError, setPasswordError] = useState("");
-
-  const navigate = useNavigate();
 
   const handleRegister = () => {
     // Verificar se todos os campos estão preenchidos
@@ -58,7 +55,7 @@ const Register: React.FC = () => {
 
     if (!isPasswordValid(password)) {
       setPasswordError(
-        "A senha deve conter pelo menos 8 caracteres, 1 letra maiúscula, 1 letra minúscula e 1 número"
+        "A senha deve conter pelo menos 8 caracteres, 1 letra maiúscula, 1 letra minúscula, 1 número e 1 caractere especial"
       );
       return;
     } else {
@@ -78,15 +75,15 @@ const Register: React.FC = () => {
       address: "Rua teste, 123",
     };
 
-    axios
+    return axios
       .post("http://localhost:3000/clients/create", data)
       .then((response) => {
-        console.log(response);
-        navigate("/login");
+        // go to login page
+
+        window.location.href = "/login";
       })
       .catch((error) => {
-        console.error(error);
-        alert("Erro ao registrar");
+        alert("Erro ao registrar, tente novamente mais tarde.");
         return;
       });
   };
@@ -101,6 +98,7 @@ const Register: React.FC = () => {
           <div>
             <label>Nome:</label>
             <TextField
+              ariaLabel="Nome"
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
@@ -109,6 +107,7 @@ const Register: React.FC = () => {
           <div>
             <label>Email:</label>
             <TextField
+              ariaLabel="Email"
               type="text"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -118,6 +117,7 @@ const Register: React.FC = () => {
           <div>
             <label>Senha:</label>
             <TextField
+              ariaLabel="Senha"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -127,6 +127,7 @@ const Register: React.FC = () => {
           <div>
             <label>CPF:</label>
             <TextField
+              ariaLabel="CPF"
               type="text"
               value={maskCPF(cpf_cnpj)}
               onChange={(e) => setCpf_cnpj(e.target.value)}

@@ -19,7 +19,7 @@ const getApprovals = async (): Promise<ApprovalItem[]> => {
       "http://localhost:3000/companies/searchAll"
     );
     const approvals = response.data;
-    console.log(response.data);
+    // console.log(response.data);
     return approvals;
   } catch (error) {
     console.error("Erro ao buscar aprovações:", error);
@@ -39,8 +39,9 @@ const Approvals: React.FC = () => {
   }, []);
 
   const handleStatusChange = async (id: number) => {
+    console.log("id", id);
     try {
-      await axios.put("http://localhost:3000/superAdmin/approveCompany/" + id);
+      await axios.get("http://localhost:3000/superAdmin/approveCompany/" + id);
       window.location.reload();
     } catch (error) {
       console.error("Erro ao mudar status:", error);

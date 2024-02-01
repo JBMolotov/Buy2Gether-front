@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Title, MainContainer, LoginContainer, Form } from "./styles";
-import { useNavigate } from "react-router-dom"; // Importe useHistory para redirecionamento
 import TextField from "../../components/textfield";
 import Button from "../../components/button";
 import ShapeLogo from "../../components/shapeLogo";
@@ -8,10 +7,9 @@ import { isEmailValid, isCPFValid } from "../validation"; // Importe as funçõe
 import axios from "axios";
 
 const Login: React.FC = () => {
-  const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [isValid, setIsValid] = useState(true);
+  const [isValid, setIsValid] = useState(false);
 
   const handleLogin = async () => {
     if (!isValid) {
@@ -36,7 +34,7 @@ const Login: React.FC = () => {
         localStorage.setItem("user", JSON.stringify(userData));
 
         // Redirecionar para a página inicial após o login bem-sucedido
-        navigate("/clientprofile");
+        window.location.href = "/clientprofile";
       } else {
         alert("Credenciais inválidas. Tente novamente.");
       }
@@ -63,6 +61,7 @@ const Login: React.FC = () => {
           <div>
             <label>Email ou CPF:</label>
             <TextField
+              ariaLabel="Email ou CPF"
               type="text"
               value={username}
               onChange={(e) => {
@@ -74,6 +73,7 @@ const Login: React.FC = () => {
           <div>
             <label>Senha:</label>
             <TextField
+              ariaLabel="Senha"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}

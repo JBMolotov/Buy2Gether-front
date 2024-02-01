@@ -108,6 +108,7 @@ const ManageOffers: React.FC = () => {
 
             <FormLabel>Oferta:</FormLabel>
             <FormInput
+              aria-label="Oferta"
               type="text"
               value={newOffer.offer}
               onChange={(e) =>
@@ -117,6 +118,7 @@ const ManageOffers: React.FC = () => {
 
             <FormLabel>Desconto (%):</FormLabel>
             <FormInput
+              aria-label="Desconto (%)"
               type="number"
               value={newOffer.discountPercentage}
               onChange={(e) =>
@@ -129,6 +131,7 @@ const ManageOffers: React.FC = () => {
 
             <FormLabel>Quantidade Mínima:</FormLabel>
             <FormInput
+              aria-label="Quantidade Mínima"
               type="number"
               value={newOffer.minPurchaseQuantity}
               onChange={(e) =>
@@ -141,6 +144,7 @@ const ManageOffers: React.FC = () => {
 
             <FormLabel>Data de Validade:</FormLabel>
             <FormInput
+              aria-label="Data de Validade"
               type="text"
               value={newOffer.expirationDate}
               onChange={(e) =>

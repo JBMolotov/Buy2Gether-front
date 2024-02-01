@@ -8,6 +8,7 @@ import ManageOffers from "./pages/ManageOffers";
 import CompanyProfile from "./pages/CompanyProfile";
 import ClientProfile from "./pages/ClientProfile";
 import ClientOffers from "./pages/ClientOffers";
+import Feedback from "./pages/Feedback";
 
 function AppRoutes() {
   return (
@@ -15,6 +16,7 @@ function AppRoutes() {
       <div>
         <Routes>
           {/* <Route path="/" exact component={Home} /> */}
+          <Route path="/feedback" element={<Feedback />} />
           <Route path="/approvals" element={<Approvals />} />
           <Route path="/manageOffers" element={<ManageOffers />} />
           <Route path="/login" element={<Login />} />

@@ -12,6 +12,17 @@ import Header from "../../components/header/Header";
 import Slider from "react-slick";
 import axios from "axios";
 
+//Fix for "matchMedia not present, legacy browsers require a polyfill jest" error
+// window.matchMedia =
+//   window.matchMedia ||
+//   function () {
+//     return {
+//       matches: false,
+//       addListener: function () {},
+//       removeListener: function () {},
+//     };
+//   };
+
 type Offer = {
   id: number;
   name: string;
@@ -40,7 +51,7 @@ type Client = {
 };
 
 // Get offers from API with type offers
-const getOffers = async (): Promise<Offer[]> => {
+export const getOffers = async (): Promise<Offer[]> => {
   // id from local storage
   const clientId = JSON.parse(localStorage.getItem("user") || "{}").id;
   try {
@@ -48,7 +59,7 @@ const getOffers = async (): Promise<Offer[]> => {
       "http://localhost:3000/clients/offersJoined/" + clientId
     );
     const offers = response.data[0].offers;
-    console.log(response.data[0]);
+    // console.log(response.data[0]);
     return offers;
   } catch (error) {
     console.error("Erro ao buscar ofertas:", error);
@@ -56,7 +67,7 @@ const getOffers = async (): Promise<Offer[]> => {
   }
 };
 
-const OfferCardComponent: React.FC<{ offer: Offer }> = ({ offer }) => {
+export const OfferCardComponent: React.FC<{ offer: Offer }> = ({ offer }) => {
   return (
     <OfferCard>
       {/* <img src="/path/to/offer-image.jpg" alt={offer.name} />{" "} */}
@@ -116,8 +127,6 @@ const ClientOffers: React.FC = () => {
       },
     ],
   };
-
-  console.log(offers.map((offer) => offer.name));
 
   return (
     <>

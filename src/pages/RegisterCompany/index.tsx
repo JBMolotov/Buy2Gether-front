@@ -47,6 +47,8 @@ const Register: React.FC = () => {
 
   const handleRegister = () => {
     // Verificar se todos os campos estão preenchidos
+    // console.log(username, email, password, cnpj_cnpj, ramo);
+
     if (
       !username ||
       !email ||
@@ -95,9 +97,9 @@ const Register: React.FC = () => {
 
     axios
       .post("http://localhost:3000/companies/create", data)
-      .then((response) => {
-        console.log(response);
-      })
+      // .then((response) => {
+      //   console.log(response);
+      // })
       .catch((error) => {
         console.log(error.response.data);
         alert("Erro no registro. Verifique os dados e tente novamente.");
@@ -131,6 +133,7 @@ const Register: React.FC = () => {
             <div>
               <label>Nome:</label>
               <TextField
+                ariaLabel="Nome"
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
@@ -139,6 +142,7 @@ const Register: React.FC = () => {
             <div>
               <label>Email:</label>
               <TextField
+                ariaLabel="Email"
                 type="text"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -148,6 +152,7 @@ const Register: React.FC = () => {
             <div>
               <label>Senha:</label>
               <TextField
+                ariaLabel="Senha"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -157,6 +162,7 @@ const Register: React.FC = () => {
             <div>
               <label>CNPJ:</label>
               <TextField
+                ariaLabel="CNPJ"
                 type="text"
                 value={maskCnpj(cnpj_cnpj)}
                 onChange={(e) => setCnpj_cnpj(e.target.value)}
@@ -168,6 +174,7 @@ const Register: React.FC = () => {
               <br></br>
               <br></br>
               <select
+                aria-label="Ramo de atuação"
                 onChange={(e) => setRamo(e.target.value)}
                 style={{
                   borderRadius: "0.5rem",

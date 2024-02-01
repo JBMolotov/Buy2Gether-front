@@ -13,13 +13,13 @@ export function isCPFValid(cpf: string): boolean {
   if (cpf.length > 11) {
     cpf = cpf.substring(0, 11);
   }
-  console.log(cpf);
   const cpfRegex = /^\d{11}$/;
   return cpfRegex.test(cpf);
 }
 
 // Função para validar senha
 export function isPasswordValid(password: string): boolean {
+  // Senha deve conter 8 caracteres, 1 letra maiúscula, 1 número e 1 caractere especial
   const regex =
     /^(?=(?:.*?[A-Z]){1})(?=(?:.*?[0-9]){1})(?=(?:.*?[!@#$%*()_+^&}{:;?.]){1})(?!.*\s)[0-9a-zA-Z!@#$%;*(){}_+^&]*$/;
   return password.length > 8 && regex.test(password);

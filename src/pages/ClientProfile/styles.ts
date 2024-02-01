@@ -40,3 +40,13 @@ export const DetailItem = styled.p`
     color: #333;
   }
 `;
+
+export const TextField = styled.input`
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+  margin-bottom: 10px;
+  font-size: 14px;
+`;

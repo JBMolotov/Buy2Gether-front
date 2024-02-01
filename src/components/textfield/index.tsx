@@ -5,16 +5,22 @@ import * as React from "react";
 import { TextField } from "./styles";
 
 interface Props {
+  ariaLabel?: string;
   type: string;
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const Textfield: React.FC<Props> = ({ type, value, onChange }) => {
+const Textfield: React.FC<Props> = ({ ariaLabel, type, value, onChange }) => {
   return (
     <>
       <br></br>
-      <TextField type={type} value={value} onChange={onChange} />
+      <TextField
+        aria-label={ariaLabel}
+        type={type}
+        value={value}
+        onChange={onChange}
+      />
     </>
   );
 };

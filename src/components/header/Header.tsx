@@ -13,7 +13,8 @@ const Header: React.FC = () => {
         <Logo>B2G</Logo>
       </Link>
       <Nav>
-        <Link to="/explore">Explorar</Link>
+        <Link to="/feedback">Feedback</Link>
+        <Link to="/approvals">Aprovações</Link>
         <Link to="/clientOffers">Minhas Ofertas</Link>
         <Link to="/clientProfile">Perfil</Link>
         <Link to="/login" onClick={logout}>
