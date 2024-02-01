@@ -1,46 +1,64 @@
-# Getting Started with Create React App
+# **Buy 2 Gether - Documentação do Projeto**
+Bem-vindo à documentação do projeto Buy 2 Gether. Este projeto é uma aplicação web desenvolvida para facilitar a interação entre empresas e clientes, permitindo a criação e gerenciamento de ofertas, perfis de empresas, aprovações, e perfis de clientes.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Estrutura do Projeto
+O projeto está organizado em várias páginas, cada uma desempenhando um papel específico. Aqui estão algumas das principais páginas do projeto:
 
-## Available Scripts
+Página Register e RegisterCompany
+A página de registro permite que empresas e clientes se cadastrem na plataforma. Ela inclui formulários para inserir informações básicas e realiza validações de entrada para garantir dados corretos.
 
-In the project directory, you can run:
+Página ManageOffers
+Esta página é destinada ao gerenciamento de ofertas, permitindo que as empresas adicionem, editem e removam ofertas. As ofertas são exibidas em uma tabela, e os usuários podem interagir com cada oferta.
 
-### `npm start`
+Página CompanyProfile e ClientProfile
+Estas páginas exibem os perfis de empresas e clientes, respectivamente. Elas recuperam dados da API com base no ID do usuário logado e exibem informações relevantes.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Página ClientOffers
+Esta página exibe ofertas disponíveis para um cliente específico. As ofertas são recuperadas da API e exibidas em um slider.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+Página Approvals
+A página de aprovações é destinada a superadministradores. Ela exibe uma tabela de empresas aguardando aprovação e permite que o superadministrador aprove ou rejeite cada empresa.
 
-### `npm test`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+# **Fluxo de Dados**
 
-### `npm run build`
+**API Calls**
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+  axios: Utilizado para realizar chamadas à API, que fornece dados relacionados a clientes, empresas, ofertas e feedback.
+  
+  
+**Gerenciamento de Estado**
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+  useState e useEffect: Utilizados para gerenciar o estado local na maioria das páginas e componentes, incluindo a obtenção e atualização de dados da API.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
+Context API: Pode ser usado para gerenciar o estado global da aplicação, compartilhando informações entre diferentes componentes.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+**Testes Automatizados**
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+Os testes automatizados são escritos usando a biblioteca jest e @testing-library/react.
 
-## Learn More
+São realizados testes para verificar se os componentes estão sendo renderizados corretamente, se as interações do usuário estão sendo tratadas adequadamente e se as chamadas da API estão sendo feitas corretamente.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+# Instalação de Dependências:
+**Para executar o projeto localmente, siga estas etapas:**
+
+Abra o terminal na pasta
+
+npm install
+ou
+yarn install
+
+Executando o Projeto:
+
+npm start
+ou
+yarn start
+
+Acesso à Aplicação:
+Abra o navegador e acesse http://localhost:3000
+
+(Lembrando que é necessário o backend rodando para que o frontend rode normalmente)
